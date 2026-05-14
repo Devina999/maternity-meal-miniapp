@@ -1,0 +1,59 @@
+<view class="container" wx:if="{{room}}">
+  <!-- 房间状态卡片 -->
+  <view class="card">
+    <view class="detail-header">
+      <view class="detail-title">{{room.room_number}}号房</view>
+      <view class="tag {{room.status === 'checked_in' ? 'tag-green' : room.status === 'temp_left' ? 'tag-orange' : 'tag-gray'}}">
+        {{room.statusName}}
+      </view>
+    </view>
+    <view class="detail-row">
+      <text class="detail-label">宝妈姓名</text>
+      <text class="detail-value">{{room.mother_name || '未录入'}}</text>
+    </view>
+    <view class="detail-row" wx:if="{{room.check_in_date}}">
+      <text class="detail-label">入住日期</text>
+      <text class="detail-value">{{room.check_in_date}}</text>
+    </view>
+    <view class="detail-row" wx:if="{{room.check_out_date}}">
+      <text class="detail-label">预计离店</text>
+      <text class="detail-value">{{room.check_out_date}}</text>
+    </view>
+    <view class="detail-row" wx:if="{{room.assigned_nurse_id}}">
+      <text class="detail-label">责任护士</text>
+      <text class="detail-value">已分配</text>
+    </view>
+    <view class="detail-notes" wx:if="{{room.notes}}">
+      <text class="detail-label">备注</text>
+      <text class="detail-value">{{room.notes}}</text>
+    </view>
+  </view>
+
+  <!-- 今日忌口 -->
+  <view class="card">
+    <view class="section-title">今日忌口</view>
+    <view wx:if="{{restrictions.length > 0}}">
+      <block wx:for="{{restrictions}}" wx:key="_id">
+        <view class="restriction-item">
+          <view class="tag-row">
+            <view class="tag tag-red" wx:for="{{item.template_tags}}" wx:key="*this" wx:for-item="tag">{{tag}}</view>
+          </view>
+          <view class="custom-note" wx:if="{{item.custom_notes}}">{{item.custom_notes}}</view>
+          <view class="cooking-note" wx:if="{{item.cooking_notes}}">
+            <text class="marker">🔶</text> {{item.cooking_notes}}
+          </view>
+        </view>
+      </block>
+    </view>
+    <view class="empty-text" wx:else>暂无忌口记录</view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-bar" wx:if="{{canEdit}}">
+    <button class="btn-outline" bindtap="onToggleStatus">
+      {{room.status === 'checked_in' ? '标记临时离店' : '标记恢复在住'}}
+    </button>
+    <button class="btn-outline" bindtap="onEdit">编辑信息</button>
+    <button class="btn-danger" bindtap="onCheckOut" wx:if="{{room.status !== 'checked_out'}}">退房</button>
+  </view>
+</view>

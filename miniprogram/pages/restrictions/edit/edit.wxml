@@ -1,0 +1,53 @@
+<view class="container">
+  <!-- 房间信息 -->
+  <view class="card" wx:if="{{roomInfo}}">
+    <view class="room-info-header">
+      <text class="room-label">{{roomInfo.room_number}}号房</text>
+      <text wx:if="{{roomInfo.mother_name}}"> · {{roomInfo.mother_name}}</text>
+    </view>
+    <view class="date-label">日期：{{date}}</view>
+  </view>
+
+  <!-- 忌口模板标签选择 -->
+  <view class="card">
+    <view class="section-title">忌口标签（可多选）</view>
+    <view class="tag-grid">
+      <view
+        class="tag-select-item {{selectedTags.indexOf(item) > -1 ? 'selected' : ''}}"
+        wx:for="{{allTags}}"
+        wx:key="*this"
+        data-tag="{{item}}"
+        bindtap="onTagToggle"
+      >{{item}}</view>
+    </view>
+    <view class="selected-count" wx:if="{{selectedTags.length > 0}}">
+      已选 {{selectedTags.length}} 项
+    </view>
+  </view>
+
+  <!-- 文字备注 -->
+  <view class="card">
+    <view class="form-group">
+      <view class="form-label">额外备注（文字描述）</view>
+      <textarea
+        class="form-textarea"
+        placeholder="如：不吃茄子，汤里不要放香菜"
+        value="{{customNotes}}"
+        bindinput="onCustomNotesInput"
+      />
+    </view>
+    <view class="form-group">
+      <view class="form-label">🔶 个性化制作要求（如少盐、不加姜）</view>
+      <textarea
+        class="form-textarea cooking-input"
+        placeholder="如：少盐，不加姜"
+        value="{{cookingNotes}}"
+        bindinput="onCookingNotesInput"
+      />
+    </view>
+  </view>
+
+  <button class="btn-primary" bindtap="onSubmit">
+    {{isEdit ? '更新忌口' : '保存忌口'}}
+  </button>
+</view>

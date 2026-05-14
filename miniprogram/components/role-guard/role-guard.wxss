@@ -1,0 +1,25 @@
+.guard-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 40rpx;
+  text-align: center;
+}
+
+.guard-icon {
+  font-size: 80rpx;
+  margin-bottom: 30rpx;
+}
+
+.guard-text {
+  font-size: 30rpx;
+  color: #999;
+  margin-bottom: 16rpx;
+}
+
+.guard-role {
+  font-size: 24rpx;
+  color: #bbb;
+  margin-bottom: 40rpx;
+}

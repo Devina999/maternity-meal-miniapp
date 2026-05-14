@@ -1,0 +1,39 @@
+<view class="dashboard">
+  <!-- 顶部欢迎区 -->
+  <view class="welcome-bar">
+    <view class="welcome-info">
+      <view class="welcome-text">你好，{{roleName}}</view>
+      <view class="welcome-date">今天 {{today}} · 明天 {{tomorrow}}</view>
+    </view>
+    <view class="logout-btn" bindtap="handleLogout">退出</view>
+  </view>
+
+  <!-- 功能入口分组 -->
+  <block wx:for="{{menuGroups}}" wx:key="title">
+    <view class="menu-group">
+      <view class="group-title">
+        <text class="group-icon">{{item.icon}}</text>
+        <text>{{item.title}}</text>
+      </view>
+      <view class="menu-grid">
+        <view
+          class="menu-card"
+          wx:for="{{item.items}}"
+          wx:for-item="menu"
+          wx:key="name"
+          data-url="{{menu.url}}"
+          bindtap="navigateTo"
+        >
+          <view class="menu-name">{{menu.name}}</view>
+          <view class="menu-desc">{{menu.desc}}</view>
+          <view class="menu-arrow">→</view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{menuGroups.length === 0}}">
+    <view class="empty-text">暂无可用功能，请联系管理员</view>
+  </view>
+</view>

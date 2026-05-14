@@ -1,0 +1,44 @@
+<view class="container">
+  <!-- 日期切换 -->
+  <view class="date-switcher">
+    <view class="date-arrow" bindtap="onPrevDay">◀</view>
+    <picker mode="date" value="{{date}}" bindchange="onDateChange">
+      <view class="date-text">{{date}}</view>
+    </picker>
+    <view class="date-arrow" bindtap="onNextDay">▶</view>
+  </view>
+
+  <!-- 房间忌口列表 -->
+  <view wx:if="{{rooms.length > 0}}">
+    <view class="card room-restriction-card" wx:for="{{rooms}}" wx:key="_id">
+      <view class="room-restriction-header">
+        <view class="room-label">{{item.room_number}}号房 · {{item.mother_name || '未录入'}}</view>
+        <view class="add-restriction-btn" wx:if="{{canEdit}}" data-room-id="{{item._id}}" bindtap="onAddRestriction">
+          + 添加忌口
+        </view>
+      </view>
+
+      <!-- 忌口展示 -->
+      <view wx:if="{{restrictionsByRoom[item._id] && restrictionsByRoom[item._id].length > 0}}">
+        <block wx:for="{{restrictionsByRoom[item._id]}}" wx:key="_id" wx:for-item="restr">
+          <view class="restriction-block" data-id="{{restr._id}}" bindtap="onEditRestriction">
+            <view class="tag-row">
+              <view class="tag tag-red" wx:for="{{restr.template_tags}}" wx:key="*this" wx:for-item="t">{{t}}</view>
+            </view>
+            <view class="custom-text" wx:if="{{restr.custom_notes}}">备注：{{restr.custom_notes}}</view>
+            <view class="cooking-text" wx:if="{{restr.cooking_notes}}">
+              <text class="marker">🔶 制作要求：</text>{{restr.cooking_notes}}
+            </view>
+          </view>
+        </block>
+      </view>
+      <view class="no-restriction" wx:else>
+        <text class="empty-hint">暂无忌口</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:if="{{rooms.length === 0}}">
+    <view>暂无在住房间</view>
+  </view>
+</view>

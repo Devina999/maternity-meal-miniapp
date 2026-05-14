@@ -1,0 +1,88 @@
+.tab-bar {
+  white-space: nowrap;
+  padding: 16rpx 0;
+  margin-bottom: 10rpx;
+}
+
+.tab-item {
+  display: inline-block;
+  padding: 12rpx 32rpx;
+  margin-right: 16rpx;
+  background: #fff;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.tab-item.active {
+  background: #4A90D9;
+  color: #fff;
+}
+
+.stats-bar {
+  display: flex;
+  justify-content: space-between;
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 16rpx;
+}
+
+.room-card {
+  position: relative;
+  cursor: pointer;
+}
+
+.room-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.room-number {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.room-info {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+}
+
+.mother-name {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 4rpx;
+}
+
+.info-label {
+  color: #999;
+}
+
+.room-notes {
+  font-size: 24rpx;
+  color: #999;
+  background: #f9f9f9;
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+  margin-top: 8rpx;
+}
+
+.room-arrow {
+  position: absolute;
+  right: 24rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ccc;
+  font-size: 28rpx;
+}
+
+.add-btn {
+  position: fixed;
+  bottom: 40rpx;
+  left: 40rpx;
+  right: 40rpx;
+  width: auto;
+}

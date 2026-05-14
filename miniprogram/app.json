@@ -1,0 +1,29 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/dashboard/dashboard",
+    "pages/rooms/list/list",
+    "pages/rooms/detail/detail",
+    "pages/rooms/edit/edit",
+    "pages/restrictions/list/list",
+    "pages/restrictions/edit/edit",
+    "pages/menu/daily-plan/daily-plan",
+    "pages/menu/dish-library/dish-library",
+    "pages/menu/ingredient-stock/ingredient-stock",
+    "pages/kitchen/production-board/production-board",
+    "pages/feedback/list/list",
+    "pages/feedback/submit/submit",
+    "pages/settings/index/index",
+    "pages/settings/user-management/user-management"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#4A90D9",
+    "navigationBarTitleText": "月子中心餐饮管理",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F5F5F5"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "cloud": true
+}

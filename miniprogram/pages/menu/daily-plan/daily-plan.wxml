@@ -1,0 +1,82 @@
+<view class="container">
+  <!-- 日期和餐别切换 -->
+  <view class="top-controls">
+    <picker mode="date" value="{{date}}" bindchange="onDateChange">
+      <view class="date-picker">📅 {{date}}</view>
+    </picker>
+    <view class="meal-tabs">
+      <view
+        class="meal-tab {{activeMealType === item.value ? 'active' : ''}}"
+        wx:for="{{mealTypes}}"
+        wx:key="value"
+        data-type="{{item.value}}"
+        bindtap="onMealTypeChange"
+      >{{item.label}}</view>
+    </view>
+  </view>
+
+  <!-- 概览统计 -->
+  <view class="stats-card">
+    <text>在住房间：{{totalRooms}}间</text>
+    <text wx:if="{{menus[activeMealType]}}">已选菜品：{{menus[activeMealType].dish_ids.length}}道</text>
+  </view>
+
+  <!-- 菜品选择区（仅编辑权限可见） -->
+  <view class="card" wx:if="{{canEdit}}">
+    <view class="section-title">选择菜品（点击切换）</view>
+    <view class="dish-grid" wx:if="{{allDishes.length > 0}}">
+      <view
+        class="dish-item {{menus[activeMealType] && menus[activeMealType].dish_ids.indexOf(item._id) > -1 ? 'selected' : ''}}"
+        wx:for="{{allDishes}}"
+        wx:key="_id"
+        data-id="{{item._id}}"
+        bindtap="onToggleDish"
+      >
+        <view class="dish-name">{{item.name}}</view>
+        <view class="dish-category">{{item.category}}</view>
+        <view class="check-mark" wx:if="{{menus[activeMealType] && menus[activeMealType].dish_ids.indexOf(item._id) > -1}}">✓</view>
+      </view>
+    </view>
+    <view class="empty-state" wx:else>
+      <view>暂无菜品，请先在菜品库添加</view>
+      <button class="btn-primary btn-sm" bindtap="onAddDish" style="margin-top:20rpx">去添加菜品</button>
+    </view>
+
+    <button
+      class="btn-primary"
+      bindtap="onConfirmMenu"
+      style="margin-top:30rpx"
+      wx:if="{{allDishes.length > 0}}"
+    >确认并发布餐单</button>
+  </view>
+
+  <!-- 阅览模式 -->
+  <view class="card" wx:if="{{!canEdit}}">
+    <view class="section-title">今日菜品</view>
+    <view wx:if="{{menus[activeMealType] && menus[activeMealType].dish_ids.length > 0}}">
+      <view class="dish-readonly" wx:for="{{menus[activeMealType].dish_ids}}" wx:key="*this">
+        <text>🍽️ {{getDishNameById(item)}}</text>
+      </view>
+    </view>
+    <view class="empty-hint" wx:else>餐单尚未发布</view>
+  </view>
+
+  <!-- 房间分配结果（仅编辑权限可见） -->
+  <view class="card" wx:if="{{canEdit && assignments.length > 0}}">
+    <view class="section-title">房间分配结果（已自动排除忌口）</view>
+    <view class="assignment-item" wx:for="{{assignments}}" wx:key="_id">
+      <view class="assignment-room">房号：{{item.room_number || '未知'}}</view>
+      <view class="assignment-dishes">
+        <text class="assigned" wx:for="{{item.assigned_dish_ids}}" wx:key="*this" wx:for-item="did">
+          ✓ {{getDishNameById(did)}}
+        </text>
+      </view>
+      <view class="assignment-excluded" wx:if="{{item.excluded_dish_ids && item.excluded_dish_ids.length > 0}}">
+        <text class="excluded-dish" wx:for="{{item.excluded_dish_ids}}" wx:key="*this" wx:for-item="eid">
+          ✗ {{getDishNameById(eid)}}
+        </text>
+      </view>
+      <view class="cooking-tag" wx:if="{{item.cooking_notes}}">🔶 {{item.cooking_notes}}</view>
+    </view>
+  </view>
+</view>

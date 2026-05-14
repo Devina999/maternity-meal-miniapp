@@ -1,0 +1,54 @@
+<view class="container">
+  <!-- 状态筛选 -->
+  <scroll-view scroll-x class="tab-bar">
+    <view
+      class="tab-item {{activeTab === index ? 'active' : ''}}"
+      wx:for="{{statusTabs}}"
+      wx:key="value"
+      data-index="{{index}}"
+      bindtap="onTabChange"
+    >{{item.label}}</view>
+  </scroll-view>
+
+  <!-- 统计概览 -->
+  <view class="stats-bar">
+    <text>共 {{rooms.length}} 间房</text>
+    <text class="stats-date">{{today}}</text>
+  </view>
+
+  <!-- 房间列表 -->
+  <view wx:if="{{rooms.length > 0}}">
+    <view
+      class="card room-card"
+      wx:for="{{rooms}}"
+      wx:key="_id"
+      data-id="{{item._id}}"
+      bindtap="onRoomTap"
+    >
+      <view class="room-header">
+        <view class="room-number">{{item.room_number}}号房</view>
+        <view class="tag {{item.status === 'checked_in' ? 'tag-green' : item.status === 'temp_left' ? 'tag-orange' : 'tag-gray'}}">
+          {{item.statusName}}
+        </view>
+      </view>
+      <view class="room-info">
+        <view class="mother-name">{{item.mother_name || '未录入'}}</view>
+        <view wx:if="{{item.check_in_date}}">
+          <text class="info-label">入住：</text>{{item.check_in_date}}
+          <text wx:if="{{item.check_out_date}}"> ~ {{item.check_out_date}}</text>
+        </view>
+      </view>
+      <view class="room-notes" wx:if="{{item.notes}}">{{item.notes}}</view>
+      <view class="room-arrow">→</view>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:if="{{rooms.length === 0}}">
+    <view>暂无房间数据</view>
+  </view>
+
+  <!-- 添加按钮 -->
+  <button class="btn-primary add-btn" bindtap="onAddRoom" wx:if="{{canManageRooms}}">
+    + 添加房间
+  </button>
+</view>

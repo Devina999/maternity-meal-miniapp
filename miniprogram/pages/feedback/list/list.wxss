@@ -1,0 +1,74 @@
+.date-filter {
+  text-align: center;
+  padding: 16rpx;
+  color: #4A90D9;
+  font-size: 26rpx;
+  margin-bottom: 10rpx;
+}
+
+.feedback-card {
+  margin-bottom: 20rpx;
+}
+
+.feedback-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.room-label {
+  font-weight: bold;
+  margin-right: 12rpx;
+}
+
+.meal-label {
+  font-size: 22rpx;
+  color: #999;
+  background: #f0f0f0;
+  padding: 2rpx 10rpx;
+  border-radius: 4rpx;
+}
+
+.star-on { color: #F0C060; font-size: 28rpx; }
+.star-off { color: #ddd; font-size: 28rpx; }
+
+.feedback-text {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 8rpx;
+}
+
+.feedback-meta {
+  font-size: 22rpx;
+  color: #bbb;
+}
+
+.kitchen-reply {
+  margin-top: 16rpx;
+  padding: 16rpx;
+  background: #f5f9ff;
+  border-radius: 8rpx;
+}
+
+.reply-label {
+  font-size: 22rpx;
+  color: #4A90D9;
+  margin-bottom: 4rpx;
+}
+
+.reply-text {
+  font-size: 26rpx;
+  color: #333;
+}
+
+.reply-btn {
+  margin-top: 16rpx;
+  padding: 10rpx 24rpx;
+  background: #4A90D9;
+  color: #fff;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  display: inline-block;
+}

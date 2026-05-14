@@ -1,0 +1,27 @@
+<view class="container">
+  <view class="card">
+    <view class="section-title">备餐截止时间设置</view>
+    <view class="setting-desc">截止时间后，忌口变更需经审批流程</view>
+    <view class="form-group">
+      <view class="form-label">每日截止时间</view>
+      <picker mode="time" value="{{cutoffTime}}" bindchange="onCutoffTimeChange">
+        <view class="form-input">{{cutoffTime}}</view>
+      </picker>
+    </view>
+    <view class="form-group">
+      <view class="form-label">启用截止管控</view>
+      <switch checked="{{cutoffEnforced}}" bindchange="onCutoffEnforcedChange"/>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">操作日志</view>
+    <view class="setting-desc">所有操作自动留痕，可追溯问题</view>
+    <view class="setting-item" bindtap="onViewAuditLog">
+      <text>查看操作记录</text>
+      <text class="arrow">→</text>
+    </view>
+  </view>
+
+  <button class="btn-primary" bindtap="onSave">保存设置</button>
+</view>

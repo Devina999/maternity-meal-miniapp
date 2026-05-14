@@ -1,0 +1,11 @@
+<block wx:if="{{allowed}}">
+  <slot></slot>
+</block>
+<block wx:else>
+  <view class="guard-block">
+    <view class="guard-icon">&#x1F512;</view>
+    <view class="guard-text">您没有访问此功能的权限</view>
+    <view class="guard-role">当前角色：{{roleName}}</view>
+    <button class="btn-primary btn-sm" bindtap="checkPermission">刷新权限</button>
+  </view>
+</block>

@@ -1,0 +1,46 @@
+<view class="container">
+  <view class="card">
+    <view class="form-group">
+      <view class="form-label">房间</view>
+      <picker mode="selector" range="{{rooms}}" range-key="room_number" bindchange="onRoomChange">
+        <view class="form-input picker-val">{{selectedRoomId ? rooms[0].room_number + '号房' : '请选择房间'}}</view>
+      </picker>
+    </view>
+
+    <view class="form-group">
+      <view class="form-label">餐别</view>
+      <view class="meal-tabs">
+        <view
+          class="meal-tab {{selectedMealType === item.value ? 'active' : ''}}"
+          wx:for="{{mealTypes}}" wx:key="value"
+          data-type="{{item.value}}" bindtap="onMealTypeChange"
+        >{{item.label}}</view>
+      </view>
+    </view>
+
+    <view class="form-group">
+      <view class="form-label">评分</view>
+      <view class="star-rating">
+        <text
+          class="star {{rating >= item ? 'active' : ''}}"
+          wx:for="{{[1,2,3,4,5]}}" wx:key="*this"
+          data-star="{{item}}" bindtap="onRating"
+        >{{rating >= item ? '★' : '☆'}}</text>
+      </view>
+    </view>
+
+    <view class="form-group">
+      <view class="form-label">评价内容</view>
+      <textarea
+        class="form-textarea"
+        placeholder="如：鱼有点咸，希望下次淡一点"
+        value="{{feedbackText}}"
+        bindinput="onTextInput"
+      />
+    </view>
+  </view>
+
+  <button class="btn-primary" bindtap="onSubmit" loading="{{submitting}}" disabled="{{submitting}}">
+    {{submitting ? '提交中...' : '提交反馈'}}
+  </button>
+</view>

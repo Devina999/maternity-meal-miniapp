@@ -1,0 +1,38 @@
+.picker-val {
+  color: #333;
+  line-height: 1.5;
+}
+
+.meal-tabs {
+  display: flex;
+  gap: 12rpx;
+}
+
+.meal-tab {
+  flex: 1;
+  text-align: center;
+  padding: 14rpx 0;
+  background: #f5f5f5;
+  border-radius: 10rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.meal-tab.active {
+  background: #4A90D9;
+  color: #fff;
+}
+
+.star-rating {
+  display: flex;
+  gap: 16rpx;
+}
+
+.star {
+  font-size: 50rpx;
+  color: #ddd;
+}
+
+.star.active {
+  color: #F0C060;
+}
