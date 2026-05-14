@@ -18,10 +18,10 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#4A90D9",
-    "navigationBarTitleText": "月子中心餐饮管理",
+    "navigationBarBackgroundColor": "#E8B4B8",
+    "navigationBarTitleText": "🌸 月子餐管家",
     "navigationBarTextStyle": "white",
-    "backgroundColor": "#F5F5F5"
+    "backgroundColor": "#F9F5F2"
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json",

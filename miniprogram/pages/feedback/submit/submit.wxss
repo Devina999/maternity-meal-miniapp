@@ -19,7 +19,7 @@
 }
 
 .meal-tab.active {
-  background: #4A90D9;
+  background: #E8B4B8;
   color: #fff;
 }
 

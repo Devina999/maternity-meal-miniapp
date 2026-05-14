@@ -18,7 +18,7 @@
 
 .user-action {
   font-size: 24rpx;
-  color: #E74C3C;
+  color: #C4A5A5;
 }
 
 .invite-result {
@@ -35,7 +35,7 @@
 .invite-code {
   font-size: 56rpx;
   font-weight: bold;
-  color: #4A90D9;
+  color: #E8B4B8;
   letter-spacing: 12rpx;
   padding: 20rpx;
   background: #f0f5ff;

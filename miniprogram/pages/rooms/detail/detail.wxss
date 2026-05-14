@@ -58,7 +58,7 @@
 
 .cooking-note {
   font-size: 26rpx;
-  color: #E67E22;
+  color: #D4BFA5;
   margin-top: 6rpx;
 }
 

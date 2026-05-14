@@ -195,6 +195,23 @@ async function updateMealCutoffSettings(instId, data) {
   return await getCollection('meal_cutoff_settings').add({ data: { institution_id: instId, ...data } })
 }
 
+// ============ 自定义标签 ============
+
+async function getCustomTags(instId) {
+  const res = await getCollection('institutions').doc(instId).get()
+  return res.data.custom_tags || []
+}
+
+async function addCustomTag(instId, tag) {
+  const current = await getCustomTags(instId)
+  if (current.includes(tag)) return current
+  current.push(tag)
+  await getCollection('institutions').doc(instId).update({
+    data: { custom_tags: current, updated_at: new Date() }
+  })
+  return current
+}
+
 module.exports = {
   db, _,
   getUserByOpenId, getUserById, getUsersByInstitution, createUser, updateUser,
@@ -206,5 +223,6 @@ module.exports = {
   getRoomAssignments, updateAssignment,
   getFeedback, createFeedback, updateFeedback,
   getAuditLogs,
-  getMealCutoffSettings, updateMealCutoffSettings
+  getMealCutoffSettings, updateMealCutoffSettings,
+  getCustomTags, addCustomTag
 }

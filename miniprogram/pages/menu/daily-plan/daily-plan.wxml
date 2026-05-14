@@ -1,3 +1,14 @@
+<wxs module="utils">
+function inArray(arr, val) {
+  if (!arr) return false;
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i] === val) return true;
+  }
+  return false;
+}
+module.exports = { inArray: inArray };
+</wxs>
+
 <view class="container">
   <!-- 日期和餐别切换 -->
   <view class="top-controls">
@@ -18,15 +29,15 @@
   <!-- 概览统计 -->
   <view class="stats-card">
     <text>在住房间：{{totalRooms}}间</text>
-    <text wx:if="{{menus[activeMealType]}}">已选菜品：{{menus[activeMealType].dish_ids.length}}道</text>
+    <text>已选菜品：{{selectedDishIds.length}}道</text>
   </view>
 
   <!-- 菜品选择区（仅编辑权限可见） -->
   <view class="card" wx:if="{{canEdit}}">
-    <view class="section-title">选择菜品（点击切换）</view>
+    <view class="section-title">选择菜品（点击切换，蓝色=已选）</view>
     <view class="dish-grid" wx:if="{{allDishes.length > 0}}">
       <view
-        class="dish-item {{menus[activeMealType] && menus[activeMealType].dish_ids.indexOf(item._id) > -1 ? 'selected' : ''}}"
+        class="dish-item {{utils.inArray(selectedDishIds, item._id) ? 'selected' : ''}}"
         wx:for="{{allDishes}}"
         wx:key="_id"
         data-id="{{item._id}}"
@@ -34,7 +45,7 @@
       >
         <view class="dish-name">{{item.name}}</view>
         <view class="dish-category">{{item.category}}</view>
-        <view class="check-mark" wx:if="{{menus[activeMealType] && menus[activeMealType].dish_ids.indexOf(item._id) > -1}}">✓</view>
+        <view class="check-mark" wx:if="{{utils.inArray(selectedDishIds, item._id)}}">✓</view>
       </view>
     </view>
     <view class="empty-state" wx:else>
@@ -53,8 +64,8 @@
   <!-- 阅览模式 -->
   <view class="card" wx:if="{{!canEdit}}">
     <view class="section-title">今日菜品</view>
-    <view wx:if="{{menus[activeMealType] && menus[activeMealType].dish_ids.length > 0}}">
-      <view class="dish-readonly" wx:for="{{menus[activeMealType].dish_ids}}" wx:key="*this">
+    <view wx:if="{{selectedDishIds.length > 0}}">
+      <view class="dish-readonly" wx:for="{{selectedDishIds}}" wx:key="*this">
         <text>🍽️ {{getDishNameById(item)}}</text>
       </view>
     </view>

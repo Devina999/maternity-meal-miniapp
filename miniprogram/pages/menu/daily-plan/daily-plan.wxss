@@ -28,7 +28,7 @@
 }
 
 .meal-tab.active {
-  background: #4A90D9;
+  background: #E8B4B8;
   color: #fff;
 }
 
@@ -66,7 +66,7 @@
 }
 
 .dish-item.selected {
-  border-color: #4A90D9;
+  border-color: #E8B4B8;
   background: #E8F4FD;
 }
 
@@ -87,7 +87,7 @@
   top: 12rpx;
   width: 36rpx;
   height: 36rpx;
-  background: #4A90D9;
+  background: #E8B4B8;
   color: #fff;
   border-radius: 50%;
   display: flex;
@@ -125,19 +125,19 @@
 
 .assigned {
   display: block;
-  color: #27AE60;
+  color: #A5C4A5;
   padding: 2rpx 0;
 }
 
 .excluded-dish {
   display: block;
-  color: #E74C3C;
+  color: #C4A5A5;
   padding: 2rpx 0;
   text-decoration: line-through;
 }
 
 .cooking-tag {
   font-size: 22rpx;
-  color: #E67E22;
+  color: #D4BFA5;
   margin-top: 4rpx;
 }

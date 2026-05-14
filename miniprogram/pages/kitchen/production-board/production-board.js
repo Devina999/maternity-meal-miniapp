@@ -1,22 +1,20 @@
 const app = getApp()
 const cloud = require('../../../utils/cloud')
-const { PRODUCTION_STATUS, PRODUCTION_STATUS_NAME, MEAL_TYPE_NAME } = require('../../../utils/constants')
 const dateHelper = require('../../../utils/date-helper')
 
 Page({
   data: {
     date: dateHelper.getToday(),
-    mealTypes: ['breakfast', 'lunch', 'dinner', 'snack'],
+    mealTypeLabels: [
+      { value: 'breakfast', label: '早餐' },
+      { value: 'lunch', label: '午餐' },
+      { value: 'dinner', label: '晚餐' },
+      { value: 'snack', label: '加餐' }
+    ],
     activeMealType: 'lunch',
     assignments: [],
-    dishes: [],
-    canUpdateStatus: false,
-    statusColors: {
-      pending: '#95A5A6',
-      cooking: '#E67E22',
-      completed: '#27AE60',
-      distributed: '#4A90D9'
-    }
+    stats: { pending: 0, cooking: 0, completed: 0, distributed: 0, total: 0 },
+    canUpdateStatus: false
   },
 
   onShow() {
@@ -34,7 +32,20 @@ Page({
         cloud.getRoomAssignments(instId, this.data.date, this.data.activeMealType),
         cloud.getDishes(instId)
       ])
-      this.setData({ assignments, dishes })
+
+      const dishNameMap = {}
+      dishes.forEach(d => { dishNameMap[d._id] = d.name })
+
+      const stats = { pending: 0, cooking: 0, completed: 0, distributed: 0, total: 0 }
+      assignments.forEach(a => {
+        stats.total++
+        const s = a.production_status || 'pending'
+        if (stats[s] !== undefined) stats[s]++
+        a.dishNames = (a.assigned_dish_ids || []).map(id => dishNameMap[id] || '未知').join('、')
+        a.excludedNames = (a.excluded_dish_ids || []).map(id => dishNameMap[id] || '未知').join('、')
+      })
+
+      this.setData({ assignments, stats })
     } catch (err) {
       console.error('加载看板失败', err)
     }
@@ -44,13 +55,11 @@ Page({
     this.setData({ activeMealType: e.currentTarget.dataset.type }, () => this.loadData())
   },
 
-  getDishNameById(id) {
-    const dish = this.data.dishes.find(d => d._id === id)
-    return dish ? dish.name : '未知'
-  },
-
   async onStatusChange(e) {
-    if (!this.data.canUpdateStatus) return
+    if (!this.data.canUpdateStatus) {
+      wx.showToast({ title: '无操作权限', icon: 'none' })
+      return
+    }
     const { id, status } = e.currentTarget.dataset
     try {
       await cloud.updateAssignment(id, {
@@ -62,21 +71,5 @@ Page({
     } catch (err) {
       wx.showToast({ title: '更新失败', icon: 'none' })
     }
-  },
-
-  getNextStatus(current) {
-    const order = ['pending', 'cooking', 'completed', 'distributed']
-    const idx = order.indexOf(current)
-    if (idx < order.length - 1) return order[idx + 1]
-    return null
-  },
-
-  getStats() {
-    const stats = { pending: 0, cooking: 0, completed: 0, distributed: 0, total: 0 }
-    this.data.assignments.forEach(a => {
-      stats.total++
-      if (stats[a.production_status] !== undefined) stats[a.production_status]++
-    })
-    return stats
   }
 })

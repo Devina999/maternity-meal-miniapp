@@ -20,13 +20,13 @@
 
 .stock-fill {
   height: 100%;
-  background: #4A90D9;
+  background: #E8B4B8;
   border-radius: 6rpx;
   transition: width 0.3s;
 }
 
 .stock-fill.low {
-  background: #E74C3C;
+  background: #C4A5A5;
 }
 
 .stock-text {
@@ -35,7 +35,7 @@
 }
 
 .alert-text {
-  color: #E74C3C;
+  color: #C4A5A5;
 }
 
 .ing-actions {
@@ -46,7 +46,7 @@
 
 .action-link {
   font-size: 24rpx;
-  color: #4A90D9;
+  color: #E8B4B8;
 }
 
-.action-link.danger { color: #E74C3C; }
+.action-link.danger { color: #C4A5A5; }

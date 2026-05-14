@@ -11,7 +11,7 @@
 .date-arrow {
   padding: 10rpx 20rpx;
   font-size: 28rpx;
-  color: #4A90D9;
+  color: #E8B4B8;
 }
 
 .date-text {
@@ -38,9 +38,9 @@
 
 .add-restriction-btn {
   font-size: 24rpx;
-  color: #4A90D9;
+  color: #E8B4B8;
   padding: 6rpx 16rpx;
-  border: 1rpx solid #4A90D9;
+  border: 1rpx solid #E8B4B8;
   border-radius: 20rpx;
 }
 
@@ -61,7 +61,7 @@
 
 .cooking-text {
   font-size: 24rpx;
-  color: #E67E22;
+  color: #D4BFA5;
   margin-top: 6rpx;
 }
 

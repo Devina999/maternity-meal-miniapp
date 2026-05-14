@@ -1,84 +1,56 @@
-<wxs module="utils">
-var statusName = {pending:'待制作',cooking:'制作中',completed:'已完成',distributed:'已分餐'};
-var statusColor = {pending:'#95A5A6',cooking:'#E67E22',completed:'#27AE60',distributed:'#4A90D9'};
-module.exports = { statusName: statusName, statusColor: statusColor };
+<wxs module="u">
+var sName = {pending:'待制作',cooking:'制作中',completed:'已完成',distributed:'已分餐'};
+var sColor = {pending:'#bbb',cooking:'#FF9F43',completed:'#FF6B9D',distributed:'#A29BFE'};
+module.exports = { n: sName, c: sColor };
 </wxs>
 
-<view class="container">
+<view class="pb-container">
+  <!-- 日期 -->
+  <view class="pb-date">📅 {{date}}</view>
+
   <!-- 餐别切换 -->
-  <view class="meal-tabs">
+  <view class="pb-tabs">
     <view
-      class="meal-tab {{activeMealType === item ? 'active' : ''}}"
-      wx:for="{{mealTypes}}" wx:key="*this"
-      data-type="{{item}}" bindtap="onMealTypeChange"
-    >
-      {{item === 'breakfast' ? '早餐' : item === 'lunch' ? '午餐' : item === 'dinner' ? '晚餐' : '加餐'}}
-    </view>
+      class="pb-tab {{activeMealType === item.value ? 'active' : ''}}"
+      wx:for="{{mealTypeLabels}}" wx:key="value"
+      data-type="{{item.value}}" bindtap="onMealTypeChange"
+    >{{item.label}}</view>
   </view>
 
-  <view class="date-label">{{date}}</view>
-
-  <!-- 统计概览 -->
-  <view class="stats-row">
-    <view class="stat-item">待制作<text class="stat-num">{{getStats().pending}}</text></view>
-    <view class="stat-item">制作中<text class="stat-num">{{getStats().cooking}}</text></view>
-    <view class="stat-item">已完成<text class="stat-num">{{getStats().completed}}</text></view>
-    <view class="stat-item">已分餐<text class="stat-num">{{getStats().distributed}}</text></view>
+  <!-- 统计 -->
+  <view class="pb-stats">
+    <view class="pb-stat"><text class="pb-stat-num">{{stats.pending}}</text>待制作</view>
+    <view class="pb-stat"><text class="pb-stat-num">{{stats.cooking}}</text>制作中</view>
+    <view class="pb-stat"><text class="pb-stat-num">{{stats.completed}}</text>已完成</view>
+    <view class="pb-stat"><text class="pb-stat-num">{{stats.distributed}}</text>已分餐</view>
   </view>
 
-  <!-- 看板卡片列表 -->
+  <!-- 看板卡片 -->
   <view wx:if="{{assignments.length > 0}}">
-    <view class="kanban-card" wx:for="{{assignments}}" wx:key="_id">
-      <view class="kanban-header">
-        <view class="room-info">
-          <text class="room-num">{{item.room_number || '未知'}}号房</text>
-          <text class="mother-name" wx:if="{{item.mother_name}}">{{item.mother_name}}</text>
+    <view class="pb-card" wx:for="{{assignments}}" wx:key="_id">
+      <view class="pb-card-top">
+        <view>
+          <text class="pb-room">{{item.room_number || '?'}}号房</text>
+          <text class="pb-mom" wx:if="{{item.mother_name}}"> · {{item.mother_name}}</text>
         </view>
-        <view
-          class="status-badge"
-          style="background: {{utils.statusColor(item.production_status || 'pending')}}"
-        >
-          {{utils.statusName(item.production_status || 'pending')}}
+        <view class="pb-badge" style="background:{{u.c(item.production_status || 'pending')}}">
+          {{u.n(item.production_status || 'pending')}}
         </view>
       </view>
+      <view class="pb-dishes">🍽️ {{item.dishNames}}</view>
+      <view class="pb-excluded" wx:if="{{item.excludedNames}}">✗ 已排除：{{item.excludedNames}}</view>
+      <view class="pb-cooking" wx:if="{{item.cooking_notes}}">🔶 {{item.cooking_notes}}</view>
 
-      <!-- 菜品列表 -->
-      <view class="dish-list">
-        <view class="kanban-dish" wx:for="{{item.assigned_dish_ids}}" wx:key="*this" wx:for-item="did">
-          <text>🍽️ {{getDishNameById(did)}}</text>
-        </view>
-      </view>
-
-      <!-- 制作要求提示 -->
-      <view class="cooking-notes" wx:if="{{item.cooking_notes}}">
-        <text class="marker">🔶</text> {{item.cooking_notes}}
-      </view>
-
-      <!-- 状态更新按钮（仅编辑权限） -->
-      <view class="status-actions" wx:if="{{canUpdateStatus && (item.production_status || 'pending') !== 'distributed'}}">
-        <button
-          class="btn-sm status-btn"
-          wx:if="{{(item.production_status || 'pending') === 'pending'}}"
-          data-id="{{item._id}}" data-status="cooking"
-          bindtap="onStatusChange"
-        >开始制作</button>
-        <button
-          class="btn-sm status-btn cooking-btn"
-          wx:if="{{(item.production_status || 'pending') === 'cooking'}}"
-          data-id="{{item._id}}" data-status="completed"
-          bindtap="onStatusChange"
-        >标记完成</button>
-        <button
-          class="btn-sm status-btn done-btn"
-          wx:if="{{(item.production_status || 'pending') === 'completed'}}"
-          data-id="{{item._id}}" data-status="distributed"
-          bindtap="onStatusChange"
-        >标记已分餐</button>
+      <view class="pb-actions" wx:if="{{canUpdateStatus && (item.production_status || 'pending') !== 'distributed'}}">
+        <button class="pb-btn" wx:if="{{(item.production_status || 'pending') === 'pending'}}" data-id="{{item._id}}" data-status="cooking" bindtap="onStatusChange">开始制作</button>
+        <button class="pb-btn cooking" wx:if="{{(item.production_status || 'pending') === 'cooking'}}" data-id="{{item._id}}" data-status="completed" bindtap="onStatusChange">标记完成</button>
+        <button class="pb-btn done" wx:if="{{(item.production_status || 'pending') === 'completed'}}" data-id="{{item._id}}" data-status="distributed" bindtap="onStatusChange">标记已分餐</button>
       </view>
     </view>
   </view>
 
   <view class="empty-state" wx:if="{{assignments.length === 0}}">
+    <view class="empty-icon">📋</view>
     <view>暂无备餐数据</view>
     <view class="empty-hint">请先发布今日餐单</view>
   </view>
