@@ -11,12 +11,13 @@ Page({
       name: ''
     },
     inviteCode: '',
-    roles: Object.keys(ROLE).map(k => ({ value: ROLE[k], label: ROLE_NAME[ROLE[k]] }))
+    roles: Object.keys(ROLE).map(k => ({ value: ROLE[k], label: ROLE_NAME[ROLE[k]] })),
+    selectedRoleIndex: 0
   },
 
   onShow() {
-    if (app.getRole() !== ROLE.SUPER_ADMIN) {
-      wx.showToast({ title: '仅超级管理员可访问', icon: 'none' })
+    if (app.getRole() !== ROLE.SUPER_ADMIN && app.getRole() !== ROLE.BOSS) {
+      wx.showToast({ title: '仅超级管理员/老板可访问', icon: 'none' })
       setTimeout(() => wx.navigateBack(), 1000)
       return
     }

@@ -5,7 +5,6 @@
       <text class="room-label">{{roomInfo.room_number}}号房</text>
       <text wx:if="{{roomInfo.mother_name}}"> · {{roomInfo.mother_name}}</text>
     </view>
-    <view class="date-label">日期：{{date}}</view>
   </view>
 
   <!-- 已选标签展示 -->

@@ -1,13 +1,4 @@
 <view class="container">
-  <!-- 日期切换 -->
-  <view class="date-switcher">
-    <view class="date-arrow" bindtap="onPrevDay">◀</view>
-    <picker mode="date" value="{{date}}" bindchange="onDateChange">
-      <view class="date-text">{{date}}</view>
-    </picker>
-    <view class="date-arrow" bindtap="onNextDay">▶</view>
-  </view>
-
   <!-- 房间忌口列表 -->
   <view wx:if="{{rooms.length > 0}}">
     <view class="card room-restriction-card" wx:for="{{rooms}}" wx:key="_id">

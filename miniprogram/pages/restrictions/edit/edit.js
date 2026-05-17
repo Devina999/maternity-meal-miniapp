@@ -21,17 +21,34 @@ Page({
   },
 
   onLoad(options) {
-    const date = options.date || dateHelper.getToday()
-    this.setData({ date })
+    this.setData({ date: options.date || dateHelper.getToday() })
     this.loadCustomTags()
 
     if (options.id) {
+      // 编辑已有忌口
       this.setData({ isEdit: true, id: options.id })
       this.loadRestriction(options.id)
     } else if (options.roomId) {
+      // 新增忌口——先查该房间是否已有，有则加载（编辑模式）
       this.setData({ roomId: options.roomId })
       this.loadRoomInfo(options.roomId)
+      this.loadExistingRestriction(options.roomId)
     }
+  },
+
+  async loadExistingRestriction(roomId) {
+    try {
+      const restrictions = await cloud.getRestrictionsByRoom(roomId, null)
+      if (restrictions.length > 0) {
+        const d = restrictions[0]
+        this.setData({
+          isEdit: true, id: d._id,
+          selectedTags: d.template_tags || [],
+          customNotes: d.custom_notes || '',
+          cookingNotes: d.cooking_notes || ''
+        }, () => this.autoMatchFromText())
+      }
+    } catch (err) { console.error('加载已有忌口失败', err) }
   },
 
   async loadCustomTags() {

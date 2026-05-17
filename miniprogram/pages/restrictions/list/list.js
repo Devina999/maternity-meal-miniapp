@@ -1,10 +1,8 @@
 const app = getApp()
 const cloud = require('../../../utils/cloud')
-const dateHelper = require('../../../utils/date-helper')
 
 Page({
   data: {
-    date: dateHelper.getToday(),
     rooms: [],
     restrictionsByRoom: {},
     canEdit: false,
@@ -14,7 +12,7 @@ Page({
   onShow() {
     const role = app.getRole()
     this.setData({
-      canEdit: role === 'super_admin' || role === 'nurse' || role === 'nurse_manager',
+      canEdit: role === 'super_admin' || role === 'nurse' || role === 'nurse_manager' || role === 'boss',
       isNurse: role === 'nurse'
     })
     this.loadData()
@@ -24,12 +22,15 @@ Page({
     try {
       const instId = app.globalData.institutionId
       const rooms = await cloud.getRooms(instId, 'checked_in')
-      const restrictions = await cloud.getRestrictionsByDate(instId, this.data.date)
+      // 获取全部忌口（不限日期）
+      const restrictions = await cloud.getRestrictionsByDate(instId, null)
 
+      // 每个房间只保留最新一条忌口，包装为数组（WXML 遍历用）
       const map = {}
       restrictions.forEach(r => {
-        if (!map[r.room_id]) map[r.room_id] = []
-        map[r.room_id].push(r)
+        if (!map[r.room_id]) {
+          map[r.room_id] = [r]
+        }
       })
 
       this.setData({ rooms, restrictionsByRoom: map })
@@ -38,31 +39,18 @@ Page({
     }
   },
 
-  onDateChange(e) {
-    this.setData({ date: e.detail.value }, () => this.loadData())
-  },
-
-  onPrevDay() {
-    const d = dateHelper.addDays(this.data.date, -1)
-    this.setData({ date: d }, () => this.loadData())
-  },
-
-  onNextDay() {
-    const d = dateHelper.addDays(this.data.date, 1)
-    this.setData({ date: d }, () => this.loadData())
-  },
-
   onAddRestriction(e) {
     const roomId = e.currentTarget.dataset.roomId
-    wx.navigateTo({ url: `/pages/restrictions/edit/edit?roomId=${roomId}&date=${this.data.date}` })
+    wx.navigateTo({ url: `/pages/restrictions/edit/edit?roomId=${roomId}` })
   },
 
   onEditRestriction(e) {
     const id = e.currentTarget.dataset.id
-    wx.navigateTo({ url: `/pages/restrictions/edit/edit?id=${id}&date=${this.data.date}` })
+    wx.navigateTo({ url: `/pages/restrictions/edit/edit?id=${id}` })
   },
 
   getRestrictionsForRoom(roomId) {
-    return this.data.restrictionsByRoom[roomId] || []
+    const r = this.data.restrictionsByRoom[roomId]
+    return r ? [r] : []
   }
 })

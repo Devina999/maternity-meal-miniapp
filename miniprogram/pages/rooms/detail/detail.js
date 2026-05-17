@@ -14,7 +14,8 @@ Page({
     const id = options.id
     if (id) this.loadRoom(id)
     this.setData({
-      canEdit: app.canManageRooms()
+      canEdit: app.canManageRooms(),
+      canDeletePerson: app.canDeletePersonFromRoom()
     })
   },
 
@@ -24,7 +25,7 @@ Page({
       room.statusName = ROOM_STATUS_NAME[room.status] || room.status
       this.setData({ room })
 
-      const restrictions = await cloud.getRestrictionsByRoom(id, dateHelper.getToday())
+      const restrictions = await cloud.getRestrictionsByRoom(id, null)
       this.setData({ restrictions })
     } catch (err) {
       console.error('加载房间失败', err)
@@ -64,6 +65,46 @@ Page({
           })
           wx.showToast({ title: '已退房', icon: 'success' })
           setTimeout(() => wx.navigateBack(), 1000)
+        }
+      }
+    })
+  },
+
+  onClearMother() {
+    const room = this.data.room
+    if (!room.mother_name && !room.check_in_date) {
+      wx.showToast({ title: '该房间无入住人信息', icon: 'none' })
+      return
+    }
+    wx.showModal({
+      title: '清空入住人',
+      content: `确定要清空${room.room_number}号房的宝妈信息吗？\n\n此操作将同时：\n· 清空房间入住信息\n· 删除该房间所有忌口记录\n· 移除该房间待处理餐食分配\n· 将房间状态改为退房\n\n此操作不可撤销！`,
+      success: async (res) => {
+        if (res.confirm) {
+          wx.showLoading({ title: '处理中...' })
+          try {
+            // 1. 删除房间忌口记录
+            await cloud.deleteRestrictionsByRoom(room._id)
+            // 2. 移除今日起的餐食分配
+            await cloud.deleteAssignmentsByRoom(room._id, dateHelper.getToday())
+            // 3. 清空房间信息并退房
+            await cloud.updateRoom(room._id, {
+              mother_name: '',
+              check_in_date: '',
+              check_out_date: '',
+              notes: '',
+              assigned_nurse_id: '',
+              status: ROOM_STATUS.CHECKED_OUT,
+              updated_at: new Date()
+            })
+            wx.hideLoading()
+            wx.showToast({ title: '已清空并退房', icon: 'success' })
+            this.loadRoom(room._id)
+          } catch (err) {
+            wx.hideLoading()
+            console.error('清空失败', err)
+            wx.showToast({ title: '操作失败', icon: 'none' })
+          }
         }
       }
     })

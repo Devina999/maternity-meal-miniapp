@@ -62,9 +62,9 @@ async function getRestrictionsByRoom(roomId, date) {
 }
 
 async function getRestrictionsByDate(instId, date) {
-  const res = await getCollection('dietary_restrictions')
-    .where({ institution_id: instId, date })
-    .get()
+  let query = getCollection('dietary_restrictions').where({ institution_id: instId })
+  if (date) query = query.where({ date })
+  const res = await query.limit(200).get()
   return res.data
 }
 
@@ -74,6 +74,24 @@ async function createRestriction(data) {
 
 async function updateRestriction(id, data) {
   return await getCollection('dietary_restrictions').doc(id).update({ data })
+}
+
+async function deleteRestriction(id) {
+  return await getCollection('dietary_restrictions').doc(id).remove()
+}
+
+async function deleteRestrictionsByRoom(roomId) {
+  const res = await getCollection('dietary_restrictions').where({ room_id: roomId }).get()
+  const tasks = res.data.map(r => getCollection('dietary_restrictions').doc(r._id).remove())
+  return await Promise.all(tasks)
+}
+
+async function deleteAssignmentsByRoom(roomId, date) {
+  let query = getCollection('room_meal_assignments').where({ room_id: roomId })
+  if (date) query = query.where({ date: _.gte(date) })
+  const res = await query.get()
+  const tasks = res.data.map(a => getCollection('room_meal_assignments').doc(a._id).remove())
+  return await Promise.all(tasks)
 }
 
 // ============ 食材 ============
@@ -216,7 +234,7 @@ module.exports = {
   db, _,
   getUserByOpenId, getUserById, getUsersByInstitution, createUser, updateUser,
   getRooms, getRoomById, createRoom, updateRoom,
-  getRestrictionsByRoom, getRestrictionsByDate, createRestriction, updateRestriction,
+  getRestrictionsByRoom, getRestrictionsByDate, createRestriction, updateRestriction, deleteRestriction, deleteRestrictionsByRoom, deleteAssignmentsByRoom,
   getIngredients, createIngredient, updateIngredient, deleteIngredient,
   getDishes, getDishById, createDish, updateDish,
   getDailyMenus, createDailyMenu, updateDailyMenu,

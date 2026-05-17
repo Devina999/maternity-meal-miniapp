@@ -1,5 +1,4 @@
 const app = getApp()
-const cloud = require('../../utils/cloud')
 const { ROLE_NAME } = require('../../utils/constants')
 
 Page({
@@ -7,7 +6,6 @@ Page({
     loading: false,
     showInviteInput: false,
     inviteCode: '',
-    needRegister: false,
     openid: ''
   },
 
@@ -17,41 +15,48 @@ Page({
     }
   },
 
+  // 微信一键登录（新老用户通用）
   handleLogin() {
-    const that = this
     this.setData({ loading: true })
 
     wx.cloud.callFunction({
       name: 'getOpenId',
-      success(res) {
-        const openid = res.result.openid
-        that.setData({ openid })
-        that.checkUser(openid)
+      success: (res) => {
+        // 直接调用 registerUser 云函数，它会自动判断：
+        // 1. 已注册 → 返回用户信息直接登录
+        // 2. 首位用户 → 自动创建超级管理员
+        // 3. 新用户 → 提示需要邀请码
+        this.doLoginOrRegister()
       },
-      fail(err) {
+      fail: (err) => {
         console.error('获取openid失败', err)
-        that.setData({ loading: false })
-        wx.showToast({ title: '登录失败，请重试', icon: 'none' })
+        this.setData({ loading: false })
+        wx.showToast({ title: '网络异常，请重试', icon: 'none' })
       }
     })
   },
 
-  async checkUser(openid) {
+  async doLoginOrRegister(inviteCode) {
     try {
-      const user = await cloud.getUserByOpenId(openid)
-      if (user) {
-        if (!user.is_active) {
-          wx.showToast({ title: '账号已被禁用', icon: 'none' })
-          this.setData({ loading: false })
-          return
-        }
+      const res = await wx.cloud.callFunction({
+        name: 'registerUser',
+        data: inviteCode ? { inviteCode } : {}
+      })
+
+      if (res.result && res.result.success) {
+        const user = res.result.user
         app.setUser(user)
-        this.navigateToDashboard()
+        wx.showToast({
+          title: res.result.alreadyExists ? '登录成功' : (res.result.message || '注册成功'),
+          icon: 'success'
+        })
+        setTimeout(() => this.navigateToDashboard(), 500)
       } else {
-        this.setData({ showInviteInput: true, needRegister: true, loading: false })
+        // 需要邀请码
+        this.setData({ showInviteInput: true, loading: false })
       }
     } catch (err) {
-      console.error('查询用户失败', err)
+      console.error('登录失败', err)
       this.setData({ loading: false })
       wx.showToast({ title: '登录失败，请重试', icon: 'none' })
     }
@@ -67,29 +72,8 @@ Page({
       wx.showToast({ title: '请输入邀请码', icon: 'none' })
       return
     }
-
     this.setData({ loading: true })
-
-    try {
-      const res = await wx.cloud.callFunction({
-        name: 'registerUser',
-        data: { inviteCode: code }
-      })
-
-      if (res.result.success) {
-        const user = res.result.user
-        app.setUser(user)
-        wx.showToast({ title: '注册成功', icon: 'success' })
-        setTimeout(() => this.navigateToDashboard(), 500)
-      } else {
-        wx.showToast({ title: res.result.message || '注册失败', icon: 'none' })
-        this.setData({ loading: false })
-      }
-    } catch (err) {
-      console.error('注册失败', err)
-      this.setData({ loading: false })
-      wx.showToast({ title: '注册失败，请重试', icon: 'none' })
-    }
+    this.doLoginOrRegister(code)
   },
 
   navigateToDashboard() {

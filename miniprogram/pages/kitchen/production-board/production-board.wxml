@@ -25,8 +25,41 @@ module.exports = { n: sName, c: sColor };
     <view class="pb-stat"><text class="pb-stat-num">{{stats.distributed}}</text>已分餐</view>
   </view>
 
-  <!-- 看板卡片 -->
-  <view wx:if="{{assignments.length > 0}}">
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{assignments.length === 0}}">
+    <view class="empty-icon">📋</view>
+    <view>暂无备餐数据</view>
+    <view class="empty-hint">请先发布今日餐单</view>
+  </view>
+
+  <!-- ===== 菜品维度汇总表 ===== -->
+  <view class="section" wx:if="{{dishTable.length > 0}}">
+    <view class="section-title">📊 备餐份数总览</view>
+    <view class="dish-summary-table">
+      <!-- 表头 -->
+      <view class="table-header">
+        <view class="th-dish">菜品</view>
+        <view class="th-portion">准备份数</view>
+        <view class="th-excluded">排除房间</view>
+        <view class="th-reason">冲突原因</view>
+      </view>
+      <!-- 表行 -->
+      <view class="table-row" wx:for="{{dishTable}}" wx:key="dish_id">
+        <view class="td-dish">
+          <text class="dish-dot">🍽️</text> {{item.dish_name}}
+        </view>
+        <view class="td-portion">
+          <text class="portion-num">{{item.portion}}</text>
+        </view>
+        <view class="td-excluded">{{item.excludedRooms}}</view>
+        <view class="td-reason">{{item.exclusionDetails || '—'}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 房间制作状态卡片 ===== -->
+  <view class="section" wx:if="{{assignments.length > 0}}">
+    <view class="section-title">📋 房间制作进度</view>
     <view class="pb-card" wx:for="{{assignments}}" wx:key="_id">
       <view class="pb-card-top">
         <view>
@@ -39,6 +72,7 @@ module.exports = { n: sName, c: sColor };
       </view>
       <view class="pb-dishes">🍽️ {{item.dishNames}}</view>
       <view class="pb-excluded" wx:if="{{item.excludedNames}}">✗ 已排除：{{item.excludedNames}}</view>
+      <view class="pb-excluded-detail" wx:if="{{item.exclusionDetails}}">⚠️ {{item.exclusionDetails}}</view>
       <view class="pb-cooking" wx:if="{{item.cooking_notes}}">🔶 {{item.cooking_notes}}</view>
 
       <view class="pb-actions" wx:if="{{canUpdateStatus && (item.production_status || 'pending') !== 'distributed'}}">
@@ -47,11 +81,5 @@ module.exports = { n: sName, c: sColor };
         <button class="pb-btn done" wx:if="{{(item.production_status || 'pending') === 'completed'}}" data-id="{{item._id}}" data-status="distributed" bindtap="onStatusChange">标记已分餐</button>
       </view>
     </view>
-  </view>
-
-  <view class="empty-state" wx:if="{{assignments.length === 0}}">
-    <view class="empty-icon">📋</view>
-    <view>暂无备餐数据</view>
-    <view class="empty-hint">请先发布今日餐单</view>
   </view>
 </view>

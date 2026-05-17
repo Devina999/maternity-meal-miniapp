@@ -14,7 +14,9 @@ Page({
     },
     categories: DISH_CATEGORY,
     canEdit: false,
-    showIngredientPicker: false
+    showIngredientPicker: false,
+    showNewIngredientForm: false,
+    newIngredient: { name: '', category: '蔬菜', unit: '克', stock: 100 }
   },
 
   onShow() {
@@ -28,6 +30,18 @@ Page({
       cloud.getDishes(instId),
       cloud.getIngredients(instId)
     ])
+
+    // 将食材名称注入到菜品数据中
+    const ingNameMap = {}
+    ingredients.forEach(ing => { ingNameMap[ing._id] = ing.name })
+    dishes.forEach(dish => {
+      if (dish.ingredients) {
+        dish.ingredients.forEach(ing => {
+          ing.name = ingNameMap[ing.ingredient_id] || '未知'
+        })
+      }
+    })
+
     this.setData({ dishes, ingredients })
   },
 
@@ -103,6 +117,64 @@ Page({
     const selections = [...this.data.form.ingredientSelections]
     selections.splice(idx, 1)
     this.setData({ 'form.ingredientSelections': selections })
+  },
+
+  // 在食材选择器中点击"添加新食材"
+  onShowNewIngredientForm() {
+    this.setData({
+      showIngredientPicker: false,
+      showNewIngredientForm: true,
+      newIngredient: { name: '', category: '蔬菜', unit: '克', stock: 100 }
+    })
+  },
+
+  onHideNewIngredientForm() {
+    this.setData({ showNewIngredientForm: false, showIngredientPicker: true })
+  },
+
+  onNewIngredientInput(e) {
+    const field = e.currentTarget.dataset.field
+    this.setData({ [`newIngredient.${field}`]: e.detail.value })
+  },
+
+  onNewIngredientCategoryChange(e) {
+    const cats = ['肉类', '蔬菜', '海鲜', '蛋奶', '调味料', '主食', '豆制品', '菌菇', '水果', '其他']
+    this.setData({ 'newIngredient.category': cats[e.detail.value] })
+  },
+
+  async onSubmitNewIngredient() {
+    const ing = this.data.newIngredient
+    if (!ing.name.trim()) {
+      wx.showToast({ title: '请输入食材名称', icon: 'none' })
+      return
+    }
+    const data = {
+      name: ing.name.trim(),
+      category: ing.category,
+      unit: ing.unit,
+      stock: parseInt(ing.stock) || 100,
+      stock_alert_threshold: 50,
+      institution_id: app.globalData.institutionId,
+      created_at: new Date(),
+      updated_at: new Date()
+    }
+    try {
+      const res = await cloud.createIngredient(data)
+      const newId = res._id
+      // 自动添加到已选食材
+      const selections = [...this.data.form.ingredientSelections]
+      selections.push({ ingredient_id: newId, name: data.name, amount: 1 })
+      this.setData({
+        'form.ingredientSelections': selections,
+        showNewIngredientForm: false
+      })
+      // 刷新食材列表
+      const ingredients = await cloud.getIngredients(app.globalData.institutionId)
+      this.setData({ ingredients })
+      wx.showToast({ title: '食材已添加', icon: 'success' })
+    } catch (err) {
+      wx.showToast({ title: '添加食材失败', icon: 'none' })
+    }
   },
 
   async onSubmit() {

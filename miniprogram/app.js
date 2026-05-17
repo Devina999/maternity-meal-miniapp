@@ -67,6 +67,11 @@ App({
 
   canManageRooms: function () {
     const role = this.getRole()
-    return role === constants.ROLE.SUPER_ADMIN || role === constants.ROLE.RECEPTIONIST
+    return role === constants.ROLE.SUPER_ADMIN || role === constants.ROLE.RECEPTIONIST || role === constants.ROLE.BOSS
+  },
+
+  canDeletePersonFromRoom: function () {
+    const role = this.getRole()
+    return role === constants.ROLE.SUPER_ADMIN || role === constants.ROLE.HEAD_CHEF || role === constants.ROLE.NURSE_MANAGER || role === constants.ROLE.BOSS
   }
 })

@@ -84,11 +84,49 @@
           </view>
         </view>
         <view class="empty-state" wx:else>
-          <view>暂无食材，请先在"食材库存"中添加</view>
+          <view>暂无食材，请点击下方按钮添加</view>
         </view>
       </scroll-view>
+      <!-- 新建食材入口 -->
+      <view class="picker-footer">
+        <view class="new-ing-btn" bindtap="onShowNewIngredientForm">
+          + 新建食材
+        </view>
+      </view>
       <view class="modal-footer">
         <button class="btn-outline" bindtap="onHideIngredientPicker">取消</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 新建食材弹层 -->
+  <view class="modal-mask" wx:if="{{showNewIngredientForm}}" bindtap="onHideNewIngredientForm">
+    <view class="modal-content" catchtap="noop">
+      <view class="modal-title">新建食材</view>
+      <scroll-view scroll-y class="modal-body">
+        <view class="form-group">
+          <view class="form-label">食材名称 *</view>
+          <input class="form-input" value="{{newIngredient.name}}" data-field="name" bindinput="onNewIngredientInput" placeholder="如：虾仁"/>
+        </view>
+        <view class="form-group">
+          <view class="form-label">分类</view>
+          <picker mode="selector" range="{{['肉类','蔬菜','海鲜','蛋奶','调味料','主食','豆制品','菌菇','水果','其他']}}" bindchange="onNewIngredientCategoryChange">
+            <view class="form-input picker-val">{{newIngredient.category}}</view>
+          </picker>
+        </view>
+        <view class="form-group">
+          <view class="form-label">单位</view>
+          <input class="form-input" value="{{newIngredient.unit}}" data-field="unit" bindinput="onNewIngredientInput" placeholder="如：克"/>
+        </view>
+        <view class="form-group">
+          <view class="form-label">初始库存</view>
+          <input class="form-input" type="number" value="{{newIngredient.stock}}" data-field="stock" bindinput="onNewIngredientInput"/>
+        </view>
+        <view class="form-hint">新食材将自动加入食材库存</view>
+      </scroll-view>
+      <view class="modal-footer">
+        <button class="btn-outline" bindtap="onHideNewIngredientForm">返回选择</button>
+        <button class="btn-primary" bindtap="onSubmitNewIngredient">创建并添加</button>
       </view>
     </view>
   </view>

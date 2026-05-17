@@ -5,7 +5,8 @@ const ROLE = {
   COOK: 'cook',
   NURSE_MANAGER: 'nurse_manager',
   NURSE: 'nurse',
-  RECEPTIONIST: 'receptionist'
+  RECEPTIONIST: 'receptionist',
+  BOSS: 'boss'
 }
 
 // 角色中文名
@@ -15,7 +16,8 @@ const ROLE_NAME = {
   cook: '后厨操作厨师',
   nurse_manager: '前厅护士经理',
   nurse: '前厅护士',
-  receptionist: '前厅前台'
+  receptionist: '前厅前台',
+  boss: '老板'
 }
 
 // 房间状态

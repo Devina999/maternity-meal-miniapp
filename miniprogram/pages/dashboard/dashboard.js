@@ -35,10 +35,29 @@ Page({
     let groups = []
 
     const allMenus = {
+      [ROLE.BOSS]: [
+        { title: '房间与入住', icon: '🏠', items: [
+          { name: '房间管理', desc: '查看管理所有房间入住状态', url: '/pages/rooms/list/list' },
+          { name: '客人忌口清单', desc: '查看所有宝妈客人忌口信息', url: '/pages/restrictions/list/list' },
+        ]},
+        { title: '餐食管理', icon: '🍽️', items: [
+          { name: '每日餐单', desc: '查看当日/明日餐单', url: '/pages/menu/daily-plan/daily-plan' },
+          { name: '菜品库管理', desc: '编辑菜品和食材绑定', url: '/pages/menu/dish-library/dish-library' },
+          { name: '食材库存', desc: '查看食材库存和预警', url: '/pages/menu/ingredient-stock/ingredient-stock' },
+          { name: '备餐进度看板', desc: '实时查看制作进度', url: '/pages/kitchen/production-board/production-board' },
+        ]},
+        { title: '反馈与数据', icon: '📊', items: [
+          { name: '餐食反馈', desc: '查看处理宝妈反馈', url: '/pages/feedback/list/list' },
+        ]},
+        { title: '系统管理', icon: '⚙️', items: [
+          { name: '系统设置', desc: '截止时间、系统规则', url: '/pages/settings/index/index' },
+          { name: '用户管理', desc: '添加禁用员工账号', url: '/pages/settings/user-management/user-management' },
+        ]},
+      ],
       [ROLE.SUPER_ADMIN]: [
         { title: '房间与入住', icon: '🏠', items: [
           { name: '房间管理', desc: '查看管理所有房间入住状态', url: '/pages/rooms/list/list' },
-          { name: '全量忌口清单', desc: '查看所有宝妈忌口信息', url: '/pages/restrictions/list/list' },
+          { name: '客人忌口清单', desc: '查看所有宝妈客人忌口信息', url: '/pages/restrictions/list/list' },
         ]},
         { title: '餐食管理', icon: '🍽️', items: [
           { name: '每日餐单', desc: '查看当日/明日餐单', url: '/pages/menu/daily-plan/daily-plan' },
@@ -62,7 +81,7 @@ Page({
           { name: '备餐进度看板', desc: '分配任务、查看进度', url: '/pages/kitchen/production-board/production-board' },
         ]},
         { title: '信息查看', icon: '📋', items: [
-          { name: '房间忌口清单', desc: '查看全量忌口信息', url: '/pages/restrictions/list/list' },
+          { name: '房间忌口清单', desc: '查看全量客人忌口信息', url: '/pages/restrictions/list/list' },
           { name: '餐食反馈', desc: '查看和处理反馈', url: '/pages/feedback/list/list' },
         ]},
       ],
@@ -71,7 +90,7 @@ Page({
           { name: '备餐进度看板', desc: '查看我的制作任务', url: '/pages/kitchen/production-board/production-board' },
         ]},
         { title: '信息查看', icon: '📋', items: [
-          { name: '房间忌口提示', desc: '查看忌口信息', url: '/pages/restrictions/list/list' },
+          { name: '房间忌口提示', desc: '查看客人忌口信息', url: '/pages/restrictions/list/list' },
           { name: '我的反馈', desc: '查看相关餐食反馈', url: '/pages/feedback/list/list' },
         ]},
       ],

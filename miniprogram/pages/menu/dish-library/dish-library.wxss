@@ -107,3 +107,12 @@
 
 .ing-pick-name { font-size: 28rpx; font-weight: bold; margin-bottom: 4rpx; }
 .ing-pick-cat { font-size: 22rpx; color: #999; }
+
+/* 选择器底部新建食材按钮 */
+.picker-footer { padding: 20rpx 30rpx; border-top: 1rpx solid #f0f0f0; }
+.new-ing-btn {
+  text-align: center; color: #E8B4B8; font-size: 26rpx;
+  padding: 20rpx; border: 2rpx dashed #E8B4B8; border-radius: 12rpx;
+}
+
+.form-hint { font-size: 22rpx; color: #bbb; text-align: center; padding: 16rpx 0; }

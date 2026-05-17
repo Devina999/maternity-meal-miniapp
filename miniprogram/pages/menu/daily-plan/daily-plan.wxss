@@ -141,3 +141,48 @@
   color: #D4BFA5;
   margin-top: 4rpx;
 }
+
+/* ===== 历史只读模式 ===== */
+.history-meal-label {
+  font-size: 28rpx; font-weight: bold; color: #E8B4B8;
+  margin-bottom: 8rpx; padding-bottom: 8rpx;
+  border-bottom: 1rpx solid #F9F5F2;
+}
+.history-dish-list { line-height: 1.8; }
+.history-dish-name { font-size: 26rpx; color: #555; }
+.history-no-dish { font-size: 24rpx; color: #ccc; }
+
+/* ===== 历史编辑警告 ===== */
+.past-warning {
+  text-align: center; padding: 16rpx; margin-bottom: 16rpx;
+  background: #FFF8E1; color: #D4A574; border-radius: 10rpx;
+  font-size: 24rpx; border: 1rpx solid #F5E0B7;
+}
+
+/* ===== 份数预览表 ===== */
+.portion-table {
+  background: #fff; border-radius: 12rpx; overflow: hidden;
+  border: 1rpx solid #f0f0f0;
+}
+.portion-header {
+  display: flex; background: #F9F5F2;
+  padding: 16rpx 10rpx; font-size: 22rpx; font-weight: bold; color: #888;
+}
+.portion-row {
+  display: flex; padding: 14rpx 10rpx; border-bottom: 1rpx solid #fafafa;
+  align-items: center; font-size: 24rpx;
+}
+.portion-row:last-child { border-bottom: none; }
+
+.ph-dish, .pd-dish { flex: 0 0 150rpx; padding: 0 4rpx; }
+.ph-count, .pd-count { flex: 0 0 100rpx; text-align: center; padding: 0 4rpx; }
+.ph-excluded, .pd-excluded { flex: 0 0 140rpx; padding: 0 4rpx; }
+.ph-reason, .pd-reason { flex: 1; padding: 0 4rpx; }
+
+.pd-dish { font-weight: bold; color: #333; }
+.count-badge {
+  display: inline-block; background: #E8B4B8; color: #fff;
+  border-radius: 16rpx; padding: 4rpx 14rpx; font-size: 22rpx; font-weight: bold;
+}
+.pd-excluded { color: #C4A5A5; font-size: 22rpx; }
+.pd-reason { color: #999; font-size: 20rpx; line-height: 1.4; }

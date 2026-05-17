@@ -16,6 +16,44 @@
 }
 .pb-stat-num { display: block; font-size: 34rpx; font-weight: bold; color: #E8B4B8; margin-bottom: 4rpx; }
 
+/* ===== 分区标题 ===== */
+.section { margin-bottom: 24rpx; }
+.section-title {
+  font-size: 28rpx; font-weight: bold; color: #555;
+  padding: 12rpx 0; margin-bottom: 12rpx;
+}
+
+/* ===== 菜品汇总表格 ===== */
+.dish-summary-table {
+  background: #fff; border-radius: 16rpx; overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(255,107,157,0.06);
+}
+
+.table-header {
+  display: flex; background: #F9F5F2; border-bottom: 2rpx solid #EED;
+  padding: 18rpx 12rpx; font-size: 22rpx; font-weight: bold; color: #888;
+}
+.table-row {
+  display: flex; padding: 16rpx 12rpx; border-bottom: 1rpx solid #F9F5F2;
+  align-items: center; font-size: 24rpx;
+}
+.table-row:last-child { border-bottom: none; }
+
+.th-dish, .td-dish { flex: 0 0 160rpx; padding: 0 4rpx; }
+.th-portion, .td-portion { flex: 0 0 100rpx; text-align: center; padding: 0 4rpx; }
+.th-excluded, .td-excluded { flex: 0 0 150rpx; padding: 0 4rpx; }
+.th-reason, .td-reason { flex: 1; padding: 0 4rpx; }
+
+.td-dish { font-weight: bold; color: #333; display: flex; align-items: center; }
+.dish-dot { margin-right: 4rpx; font-size: 22rpx; }
+.portion-num {
+  display: inline-block; background: #E8B4B8; color: #fff;
+  border-radius: 16rpx; padding: 4rpx 16rpx; font-size: 22rpx; font-weight: bold;
+}
+.td-excluded { color: #C4A5A5; font-size: 22rpx; }
+.td-reason { color: #999; font-size: 20rpx; line-height: 1.4; }
+
+/* ===== 房间制作状态卡片 ===== */
 .pb-card {
   background: #fff; border-radius: 16rpx; padding: 24rpx;
   margin-bottom: 16rpx; border-left: 8rpx solid #E8B4B8;
@@ -27,6 +65,7 @@
 .pb-badge { padding: 6rpx 18rpx; border-radius: 20rpx; color: #fff; font-size: 22rpx; }
 .pb-dishes { font-size: 26rpx; color: #555; padding: 6rpx 0; }
 .pb-excluded { font-size: 22rpx; color: #C4A5A5; padding: 6rpx 0; }
+.pb-excluded-detail { font-size: 22rpx; color: #E8A0A0; padding: 4rpx 0; line-height: 1.4; }
 .pb-cooking {
   background: #F9F5F2; padding: 10rpx 16rpx; border-radius: 8rpx;
   font-size: 24rpx; color: #E8B4B8; margin: 8rpx 0;
