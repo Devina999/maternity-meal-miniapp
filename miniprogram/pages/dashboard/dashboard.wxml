@@ -2,10 +2,27 @@
   <!-- 顶部欢迎区 -->
   <view class="welcome-bar">
     <view class="welcome-info">
-      <view class="welcome-text">你好，{{roleName}}</view>
+      <view class="welcome-text">你好，{{isSimulating ? simulatedRoleName : realRoleName}}</view>
       <view class="welcome-date">今天 {{today}} · 明天 {{tomorrow}}</view>
     </view>
     <view class="logout-btn" bindtap="handleLogout">退出</view>
+  </view>
+
+  <!-- 角色模拟提示条 -->
+  <view class="role-sim-bar" wx:if="{{isSimulating}}">
+    <view class="sim-hint">
+      <text class="sim-icon">👁️</text>
+      <text>正在以"{{simulatedRoleName}}"视角查看</text>
+    </view>
+    <view class="restore-btn" bindtap="onRestoreRole">还原身份</view>
+  </view>
+
+  <!-- 角色切换器（仅超管可见） -->
+  <view class="role-switcher" wx:if="{{isSuperAdmin && !isSimulating}}">
+    <view class="switcher-label">🔍 模拟角色视角</view>
+    <picker mode="selector" range="{{simulateRoles}}" range-key="label" value="{{simulateRoleIndex}}" bindchange="onSimulateRoleChange">
+      <view class="switcher-picker">{{simulateRoles[0].label}} ▾</view>
+    </picker>
   </view>
 
   <!-- 功能入口分组 -->

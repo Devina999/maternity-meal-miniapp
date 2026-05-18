@@ -1,5 +1,6 @@
 const app = getApp()
 const cloud = require('../../../utils/cloud')
+const { DISH_PRODUCTION_STATUS } = require('../../../utils/constants')
 const dateHelper = require('../../../utils/date-helper')
 
 Page({
@@ -12,16 +13,20 @@ Page({
       { value: 'snack', label: '加餐' }
     ],
     activeMealType: 'lunch',
-    assignments: [],
-    dishTable: [],           // 菜品维度汇总表
-    stats: { pending: 0, cooking: 0, completed: 0, distributed: 0, total: 0 },
-    canUpdateStatus: false
+    menu: null,
+    dishes: [],
+    stats: { preparing: 0, completed: 0, served: 0, total: 0 },
+    canUpdateToCompleted: false,
+    canUpdateToServed: false,
+    canUndo: false
   },
 
   onShow() {
     const role = app.getRole()
     this.setData({
-      canUpdateStatus: role === 'super_admin' || role === 'head_chef' || role === 'cook' || role === 'boss'
+      canUpdateToCompleted: role === 'super_admin' || role === 'head_chef' || role === 'cook' || role === 'boss' || role === 'nurse_manager',
+      canUpdateToServed: role === 'super_admin' || role === 'nurse_manager' || role === 'boss' || role === 'head_chef',
+      canUndo: role === 'super_admin' || role === 'boss' || role === 'head_chef'
     })
     this.loadData()
   },
@@ -29,59 +34,49 @@ Page({
   async loadData() {
     try {
       const instId = app.globalData.institutionId
-      const [assignments, dishes] = await Promise.all([
-        cloud.getRoomAssignments(instId, this.data.date, this.data.activeMealType),
+      const mealType = this.data.activeMealType
+      const [menus, allDishes] = await Promise.all([
+        cloud.getDailyMenus(instId, this.data.date),
         cloud.getDishes(instId)
       ])
 
       const dishNameMap = {}
-      dishes.forEach(d => { dishNameMap[d._id] = d.name })
+      allDishes.forEach(d => { dishNameMap[d._id] = d.name })
 
-      // 房间统计
-      const stats = { pending: 0, cooking: 0, completed: 0, distributed: 0, total: 0 }
-      assignments.forEach(a => {
-        stats.total++
-        const s = a.production_status || 'pending'
-        if (stats[s] !== undefined) stats[s]++
-        a.dishNames = (a.assigned_dish_ids || []).map(id => dishNameMap[id] || '未知').join('、')
-        a.excludedNames = (a.excluded_dish_ids || []).map(id => dishNameMap[id] || '未知').join('、')
-        a.exclusionDetails = a.exclusion_reasons
-          ? Object.entries(a.exclusion_reasons).map(([did, reason]) => `${dishNameMap[did] || '?'}: ${reason}`).join('；')
-          : ''
-      })
+      const menu = menus.find(m => m.meal_type === mealType) || null
 
-      // 构建菜品维度汇总表
-      const totalRooms = assignments.length
-      const dishStats = {}
-      assignments.forEach(a => {
-        (a.assigned_dish_ids || []).forEach(did => {
-          if (!dishStats[did]) dishStats[did] = { assigned: 0, excludedRooms: [], exclusionReasons: {} }
-          dishStats[did].assigned++
-        })
-        const roomNum = a.room_number || '?'
-        ;(a.excluded_dish_ids || []).forEach(did => {
-          if (!dishStats[did]) dishStats[did] = { assigned: 0, excludedRooms: [], exclusionReasons: {} }
-          dishStats[did].excludedRooms.push(roomNum)
-          const reason = (a.exclusion_reasons || {})[did] || '忌口'
-          dishStats[did].exclusionReasons[roomNum] = reason
-        })
-      })
+      if (!menu || menu.status !== 'confirmed' || !menu.dish_ids || menu.dish_ids.length === 0) {
+        this.setData({ menu: null, dishes: [], stats: { preparing: 0, completed: 0, served: 0, total: 0 } })
+        return
+      }
 
-      const dishTable = Object.entries(dishStats)
-        .map(([did, s]) => ({
+      const progressMap = {
+        [DISH_PRODUCTION_STATUS.PREPARING]: 33,
+        [DISH_PRODUCTION_STATUS.COMPLETED]: 66,
+        [DISH_PRODUCTION_STATUS.SERVED]: 100
+      }
+      const production = menu.dish_production || {}
+      const dishes = menu.dish_ids.map(did => {
+        const prod = production[did]
+        const status = prod ? prod.status : DISH_PRODUCTION_STATUS.PREPARING
+        return {
           dish_id: did,
           dish_name: dishNameMap[did] || '未知菜品',
-          portion: `${s.assigned}/${totalRooms}`,
-          excludedRooms: s.excludedRooms.length > 0 ? s.excludedRooms.join('、') : '无',
-          exclusionDetails: s.excludedRooms.length > 0
-            ? s.excludedRooms.map(rn => `${rn}号(${s.exclusionReasons[rn] || '忌口'})`).join('；')
-            : ''
-        }))
-        .sort((a, b) => b.portion.localeCompare(a.portion)) // 按份数降序
+          status,
+          progress: progressMap[status] || 0,
+          updated_by: prod ? prod.updated_by : null,
+          updated_at: prod ? prod.updated_at : null
+        }
+      })
 
-      this.setData({ assignments, dishTable, stats })
+      const stats = { preparing: 0, completed: 0, served: 0, total: dishes.length }
+      dishes.forEach(d => {
+        if (stats[d.status] !== undefined) stats[d.status]++
+      })
+
+      this.setData({ menu, dishes, stats })
     } catch (err) {
-      console.error('加载看板失败', err)
+      console.error('加载备餐看板失败', err)
     }
   },
 
@@ -90,19 +85,15 @@ Page({
   },
 
   async onStatusChange(e) {
-    if (!this.data.canUpdateStatus) {
-      wx.showToast({ title: '无操作权限', icon: 'none' })
-      return
-    }
-    const { id, status } = e.currentTarget.dataset
+    const { dishId, status } = e.currentTarget.dataset
+    const menuId = this.data.menu._id
+
     try {
-      await cloud.updateAssignment(id, {
-        production_status: status,
-        production_updated_by: app.globalData.user._id,
-        production_updated_at: new Date()
-      })
+      await cloud.updateDishProduction(menuId, dishId, status, app.globalData.user._id)
+      wx.showToast({ title: '状态已更新', icon: 'success' })
       this.loadData()
     } catch (err) {
+      console.error('更新制作状态失败', err)
       wx.showToast({ title: '更新失败', icon: 'none' })
     }
   }

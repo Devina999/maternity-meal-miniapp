@@ -12,7 +12,7 @@ Page({
   onShow() {
     const role = app.getRole()
     this.setData({
-      canEdit: role === 'super_admin' || role === 'nurse' || role === 'nurse_manager' || role === 'boss',
+      canEdit: role === 'super_admin' || role === 'nurse_manager' || role === 'boss' || role === 'receptionist',
       isNurse: role === 'nurse'
     })
     this.loadData()
@@ -45,6 +45,7 @@ Page({
   },
 
   onEditRestriction(e) {
+    if (!this.data.canEdit) return
     const id = e.currentTarget.dataset.id
     wx.navigateTo({ url: `/pages/restrictions/edit/edit?id=${id}` })
   },

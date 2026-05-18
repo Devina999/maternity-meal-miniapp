@@ -17,39 +17,22 @@ module.exports = { inArray: inArray };
     </picker>
   </view>
 
-  <!-- 历史日期只读模式 -->
-  <block wx:if="{{isPast && !canEditPast && !canEdit}}">
-    <!-- 餐别总览表 -->
-    <view class="card" wx:for="{{mealTypes}}" wx:key="value">
-      <view class="history-meal-label">{{item.label}}</view>
-      <view class="history-dish-list">
-        <block wx:if="{{menus[item.value] && menus[item.value].dish_ids && menus[item.value].dish_ids.length > 0}}">
-          <text class="history-dish-name" wx:for="{{menus[item.value].dish_ids}}" wx:key="*this" wx:for-item="did">{{getDishNameById(did)}}<text wx:if="{{index < menus[item.value].dish_ids.length - 1}}">、</text></text>
-        </block>
-        <text class="history-no-dish" wx:else>未设置</text>
-      </view>
-    </view>
-    <view class="empty-state" wx:if="{{!menus || Object.keys(menus).length === 0}}">
-      <view>该日期暂无餐单记录</view>
-    </view>
-  </block>
+  <!-- 餐别切换 -->
+  <view class="meal-tabs">
+    <view
+      class="meal-tab {{activeMealType === item.value ? 'active' : ''}}"
+      wx:for="{{mealTypes}}"
+      wx:key="value"
+      data-type="{{item.value}}"
+      bindtap="onMealTypeChange"
+    >{{item.label}}</view>
+  </view>
 
-  <!-- 可编辑模式（今天/明天，或超管/老板/主厨编辑历史） -->
-  <block wx:else>
+  <!-- ========== 可编辑模式（后厨主厨/老板/超级管理员） ========== -->
+  <block wx:if="{{canEdit}}">
     <!-- 历史日期编辑警告 -->
     <view class="past-warning" wx:if="{{isPast}}">
       ⚠️ 您正在修改{{date}}的历史餐单，请谨慎操作
-    </view>
-
-    <!-- 餐别切换 -->
-    <view class="meal-tabs">
-      <view
-        class="meal-tab {{activeMealType === item.value ? 'active' : ''}}"
-        wx:for="{{mealTypes}}"
-        wx:key="value"
-        data-type="{{item.value}}"
-        bindtap="onMealTypeChange"
-      >{{item.label}}</view>
     </view>
 
     <!-- 概览统计 -->
@@ -106,23 +89,85 @@ module.exports = { inArray: inArray };
       wx:if="{{allDishes.length > 0 && selectedDishIds.length > 0}}"
     >确认并发布餐单</button>
 
-    <!-- 房间分配结果 -->
-    <view class="card" wx:if="{{assignments.length > 0}}">
-      <view class="section-title">房间分配结果（已自动排除忌口）</view>
-      <view class="assignment-item" wx:for="{{assignments}}" wx:key="_id">
-        <view class="assignment-room">房号：{{item.room_number || '未知'}}</view>
-        <view class="assignment-dishes">
-          <text class="assigned" wx:for="{{item.assigned_dish_ids}}" wx:key="*this" wx:for-item="did">
-            ✓ {{getDishNameById(did)}}
-          </text>
+    <button
+      class="btn-cancel-menu"
+      bindtap="onCancelMenu"
+      style="margin-top:30rpx"
+      wx:if="{{menus[activeMealType] && menus[activeMealType].status === 'confirmed' && canCancelMenu}}"
+    >取消发布餐单</button>
+  </block>
+
+  <!-- ========== 只读模式（护士/前台/厨师/护士经理等） ========== -->
+  <block wx:else>
+    <!-- 概览统计 -->
+    <view class="stats-card">
+      <text>在住房间：{{totalRooms}}间</text>
+      <text>菜品数量：{{selectedDishIds.length}}道</text>
+      <text wx:if="{{menus[activeMealType]}}">状态：{{menus[activeMealType].status === 'confirmed' ? '已发布' : '草稿'}}</text>
+    </view>
+
+    <!-- 只读菜品列表 -->
+    <view class="card">
+      <view class="section-title">今日菜品</view>
+      <view wx:if="{{selectedDishNames.length > 0}}">
+        <view class="dish-readonly" wx:for="{{selectedDishNames}}" wx:key="*this">
+          🍽️ {{item}}
         </view>
-        <view class="assignment-excluded" wx:if="{{item.excluded_dish_ids && item.excluded_dish_ids.length > 0}}">
-          <text class="excluded-dish" wx:for="{{item.excluded_dish_ids}}" wx:key="*this" wx:for-item="eid">
-            ✗ {{getDishNameById(eid)}}
-          </text>
-        </view>
-        <view class="cooking-tag" wx:if="{{item.cooking_notes}}">🔶 {{item.cooking_notes}}</view>
+      </view>
+      <view class="empty-state" wx:else>
+        <view>暂无菜品</view>
       </view>
     </view>
+
+    <!-- 份数预览 -->
+    <view class="card" wx:if="{{portionPreview.length > 0}}">
+      <view class="section-title">📊 份数预览（基于当前忌口自动排除）</view>
+      <view class="portion-table">
+        <view class="portion-header">
+          <view class="ph-dish">菜品</view>
+          <view class="ph-count">准备份数</view>
+          <view class="ph-excluded">排除房间</view>
+          <view class="ph-reason">冲突原因</view>
+        </view>
+        <view class="portion-row" wx:for="{{portionPreview}}" wx:key="dish_id">
+          <view class="pd-dish">🍽️ {{item.dish_name}}</view>
+          <view class="pd-count"><text class="count-badge">{{item.portion}}</text></view>
+          <view class="pd-excluded">{{item.excludedRooms || '无'}}</view>
+          <view class="pd-reason">{{item.exclusionReasons || '—'}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 取消发布（护士经理可取消） -->
+    <button
+      class="btn-cancel-menu"
+      bindtap="onCancelMenu"
+      style="margin-top:30rpx"
+      wx:if="{{menus[activeMealType] && menus[activeMealType].status === 'confirmed' && canCancelMenu}}"
+    >取消发布餐单</button>
   </block>
+
+  <!-- 房间分配结果（所有角色可见） -->
+  <view class="card" wx:if="{{assignments.length > 0}}">
+    <view class="section-title">房间分配结果（已自动排除忌口）</view>
+    <view class="assignment-item" wx:for="{{assignments}}" wx:key="_id">
+      <view class="assignment-room">房号：{{item.room_number || '未知'}}</view>
+      <view class="assignment-dishes">
+        <text class="assigned" wx:for="{{item.assigned_dish_ids}}" wx:key="*this" wx:for-item="did">
+          ✓ {{getDishNameById(did)}}
+        </text>
+      </view>
+      <view class="assignment-excluded" wx:if="{{item.excluded_dish_ids && item.excluded_dish_ids.length > 0}}">
+        <text class="excluded-dish" wx:for="{{item.excluded_dish_ids}}" wx:key="*this" wx:for-item="eid">
+          ✗ {{getDishNameById(eid)}}
+        </text>
+      </view>
+      <view class="cooking-tag" wx:if="{{item.cooking_notes}}">🔶 {{item.cooking_notes}}</view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!menus || Object.keys(menus).length === 0}}">
+    <view>该日期暂无餐单记录</view>
+  </view>
 </view>

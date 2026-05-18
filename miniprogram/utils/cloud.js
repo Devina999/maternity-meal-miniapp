@@ -30,6 +30,10 @@ async function updateUser(id, data) {
   return await getCollection('users').doc(id).update({ data })
 }
 
+async function deleteUser(id) {
+  return await getCollection('users').doc(id).remove()
+}
+
 // ============ 房间 ============
 
 async function getRooms(instId, status) {
@@ -50,6 +54,10 @@ async function createRoom(data) {
 
 async function updateRoom(id, data) {
   return await getCollection('rooms').doc(id).update({ data })
+}
+
+async function deleteRoom(id) {
+  return await getCollection('rooms').doc(id).remove()
 }
 
 // ============ 忌口 ============
@@ -155,6 +163,20 @@ async function updateDailyMenu(id, data) {
   return await getCollection('daily_menus').doc(id).update({ data })
 }
 
+// 更新菜品制作状态（存储在 daily_menus.dish_production 中）
+async function updateDishProduction(menuId, dishId, status, userId) {
+  const key = `dish_production.${dishId}`
+  return await getCollection('daily_menus').doc(menuId).update({
+    data: {
+      [key]: {
+        status,
+        updated_by: userId,
+        updated_at: new Date()
+      }
+    }
+  })
+}
+
 // ============ 房餐分配 ============
 
 async function getRoomAssignments(instId, date, mealType) {
@@ -232,12 +254,12 @@ async function addCustomTag(instId, tag) {
 
 module.exports = {
   db, _,
-  getUserByOpenId, getUserById, getUsersByInstitution, createUser, updateUser,
-  getRooms, getRoomById, createRoom, updateRoom,
+  getUserByOpenId, getUserById, getUsersByInstitution, createUser, updateUser, deleteUser,
+  getRooms, getRoomById, createRoom, updateRoom, deleteRoom,
   getRestrictionsByRoom, getRestrictionsByDate, createRestriction, updateRestriction, deleteRestriction, deleteRestrictionsByRoom, deleteAssignmentsByRoom,
   getIngredients, createIngredient, updateIngredient, deleteIngredient,
   getDishes, getDishById, createDish, updateDish,
-  getDailyMenus, createDailyMenu, updateDailyMenu,
+  getDailyMenus, createDailyMenu, updateDailyMenu, updateDishProduction,
   getRoomAssignments, updateAssignment,
   getFeedback, createFeedback, updateFeedback,
   getAuditLogs,

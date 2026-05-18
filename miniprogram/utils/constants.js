@@ -33,7 +33,7 @@ const ROOM_STATUS_NAME = {
   checked_out: '已退房'
 }
 
-// 制作状态
+// 制作状态（房间维度）
 const PRODUCTION_STATUS = {
   PENDING: 'pending',
   COOKING: 'cooking',
@@ -46,6 +46,19 @@ const PRODUCTION_STATUS_NAME = {
   cooking: '制作中',
   completed: '已完成',
   distributed: '已分餐'
+}
+
+// 菜品制作状态（菜品维度）
+const DISH_PRODUCTION_STATUS = {
+  PREPARING: 'preparing',
+  COMPLETED: 'completed',
+  SERVED: 'served'
+}
+
+const DISH_PRODUCTION_STATUS_NAME = {
+  preparing: '制作中',
+  completed: '制作完成',
+  served: '上菜完成'
 }
 
 // 餐食类型
@@ -100,6 +113,7 @@ module.exports = {
   ROLE, ROLE_NAME,
   ROOM_STATUS, ROOM_STATUS_NAME,
   PRODUCTION_STATUS, PRODUCTION_STATUS_NAME,
+  DISH_PRODUCTION_STATUS, DISH_PRODUCTION_STATUS_NAME,
   MEAL_TYPE, MEAL_TYPE_NAME,
   RESTRICTION_TAGS,
   INGREDIENT_CATEGORY,

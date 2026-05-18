@@ -1,5 +1,6 @@
 const app = getApp()
 const cloud = require('../../../utils/cloud')
+const { ROLE_NAME } = require('../../../utils/constants')
 const dateHelper = require('../../../utils/date-helper')
 
 Page({
@@ -12,7 +13,7 @@ Page({
   onShow() {
     const role = app.getRole()
     this.setData({
-      canRespond: role === 'super_admin' || role === 'head_chef' || role === 'nurse_manager'
+      canRespond: true
     })
     this.loadData()
   },
@@ -20,7 +21,17 @@ Page({
   async loadData() {
     try {
       const instId = app.globalData.institutionId
-      const feedbacks = await cloud.getFeedback(instId, this.data.date || null)
+      const [feedbacks, rooms] = await Promise.all([
+        cloud.getFeedback(instId, this.data.date || null),
+        cloud.getRooms(instId)
+      ])
+      const roomMap = {}
+      rooms.forEach(r => { roomMap[r._id] = r.room_number })
+      feedbacks.forEach(f => {
+        if (!f.room_number && f.room_id) {
+          f.room_number = roomMap[f.room_id] || ''
+        }
+      })
       this.setData({ feedbacks })
     } catch (err) {
       console.error('加载反馈失败', err)
@@ -40,10 +51,12 @@ Page({
       placeholderText: '输入处理备注...',
       success: async (res) => {
         if (res.confirm && res.content) {
+          const user = app.globalData.user
           await cloud.updateFeedback(id, {
             kitchen_response: res.content,
             kitchen_acknowledged: true,
-            kitchen_responded_by: app.globalData.user._id,
+            kitchen_responded_by: user._id,
+            kitchen_responded_role: ROLE_NAME[user.role] || user.role,
             kitchen_responded_at: new Date()
           })
           wx.showToast({ title: '已回复', icon: 'success' })

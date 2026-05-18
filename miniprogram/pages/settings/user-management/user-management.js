@@ -5,13 +5,14 @@ const { ROLE, ROLE_NAME } = require('../../../utils/constants')
 Page({
   data: {
     users: [],
+    canDelete: false,
     showInviteForm: false,
     inviteForm: {
       role: ROLE.NURSE,
       name: ''
     },
     inviteCode: '',
-    roles: Object.keys(ROLE).map(k => ({ value: ROLE[k], label: ROLE_NAME[ROLE[k]] })),
+    roles: [],
     selectedRoleIndex: 0
   },
 
@@ -21,6 +22,7 @@ Page({
       setTimeout(() => wx.navigateBack(), 1000)
       return
     }
+    this.setData({ canDelete: app.getRole() === ROLE.SUPER_ADMIN || app.getRole() === ROLE.BOSS })
     this.loadUsers()
   },
 
@@ -37,7 +39,19 @@ Page({
   },
 
   onShowInviteForm() {
-    this.setData({ showInviteForm: true, inviteCode: '' })
+    const role = app.getRole()
+    let roles = Object.keys(ROLE).map(k => ({ value: ROLE[k], label: ROLE_NAME[ROLE[k]] }))
+    // 老板不能邀请超级管理员
+    if (role === ROLE.BOSS) {
+      roles = roles.filter(r => r.value !== ROLE.SUPER_ADMIN)
+    }
+    this.setData({
+      showInviteForm: true,
+      inviteCode: '',
+      roles,
+      selectedRoleIndex: 0,
+      'inviteForm.role': roles.length > 0 ? roles[0].value : ''
+    })
   },
 
   onCancel() {
@@ -45,7 +59,11 @@ Page({
   },
 
   onRoleChange(e) {
-    this.setData({ 'inviteForm.role': this.data.roles[e.detail.value].value })
+    const idx = e.detail.value
+    this.setData({
+      selectedRoleIndex: idx,
+      'inviteForm.role': this.data.roles[idx].value
+    })
   },
 
   onNameInput(e) {
@@ -93,6 +111,28 @@ Page({
           })
           wx.showToast({ title: `已${action}`, icon: 'success' })
           this.loadUsers()
+        }
+      }
+    })
+  },
+
+  async onDeleteUser(e) {
+    const user = this.data.users.find(u => u._id === e.currentTarget.dataset.id)
+    if (!user) return
+
+    wx.showModal({
+      title: '删除用户',
+      content: `确定要永久删除"${user.name}（${user.roleName}）"吗？\n\n此操作不可撤销！`,
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            await cloud.deleteUser(user._id)
+            wx.showToast({ title: '已删除', icon: 'success' })
+            this.loadUsers()
+          } catch (err) {
+            console.error('删除用户失败', err)
+            wx.showToast({ title: '删除失败', icon: 'none' })
+          }
         }
       }
     })

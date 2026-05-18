@@ -57,6 +57,6 @@
     <button class="btn-danger" bindtap="onCheckOut" wx:if="{{room.status !== 'checked_out'}}">退房</button>
   </view>
   <view class="action-bar" wx:if="{{canDeletePerson}}">
-    <button class="btn-danger" bindtap="onClearMother">清空入住人信息</button>
+    <button class="btn-danger" bindtap="onClearMother">清除住户并删除房间</button>
   </view>
 </view>

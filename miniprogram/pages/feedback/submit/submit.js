@@ -60,9 +60,12 @@ Page({
 
     this.setData({ submitting: true })
 
+    const room = this.data.rooms.find(r => r._id === this.data.selectedRoomId)
+
     try {
       await cloud.createFeedback({
         room_id: this.data.selectedRoomId,
+        room_number: room ? room.room_number : '',
         institution_id: app.globalData.institutionId,
         date: dateHelper.getToday(),
         meal_type: this.data.selectedMealType,

@@ -86,3 +86,39 @@
   color: #ccc;
   font-size: 28rpx;
 }
+
+/* 角色模拟提示条 */
+.role-sim-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20rpx 20rpx 0;
+  padding: 18rpx 24rpx;
+  background: #FFF8E1;
+  border: 1rpx solid #F5E0B7;
+  border-radius: 12rpx;
+}
+.sim-hint { font-size: 24rpx; color: #D4A574; display: flex; align-items: center; }
+.sim-icon { margin-right: 8rpx; }
+.restore-btn {
+  font-size: 24rpx; color: #fff; background: #D4A574;
+  padding: 8rpx 20rpx; border-radius: 20rpx;
+}
+
+/* 角色切换器 */
+.role-switcher {
+  margin: 20rpx;
+  padding: 20rpx 24rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.switcher-label {
+  font-size: 26rpx; color: #666;
+}
+.switcher-picker {
+  font-size: 26rpx; color: #E8B4B8; font-weight: bold;
+  padding: 10rpx 24rpx; background: #F9F5F2;
+  border-radius: 20rpx; border: 1rpx solid #EED;
+}

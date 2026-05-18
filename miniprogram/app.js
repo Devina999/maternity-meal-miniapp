@@ -24,7 +24,8 @@ App({
   globalData: {
     user: null,
     isLoggedIn: false,
-    institutionId: null
+    institutionId: null,
+    simulatedRole: null
   },
 
   setUser: function (user) {
@@ -43,8 +44,21 @@ App({
   },
 
   getRole: function () {
+    if (this.globalData.simulatedRole) return this.globalData.simulatedRole
     const user = this.globalData.user
     return user ? user.role : null
+  },
+
+  setSimulatedRole: function (role) {
+    this.globalData.simulatedRole = role
+  },
+
+  clearSimulatedRole: function () {
+    this.globalData.simulatedRole = null
+  },
+
+  isSimulating: function () {
+    return !!this.globalData.simulatedRole
   },
 
   isRole: function (role) {
@@ -67,7 +81,7 @@ App({
 
   canManageRooms: function () {
     const role = this.getRole()
-    return role === constants.ROLE.SUPER_ADMIN || role === constants.ROLE.RECEPTIONIST || role === constants.ROLE.BOSS
+    return role === constants.ROLE.SUPER_ADMIN || role === constants.ROLE.RECEPTIONIST || role === constants.ROLE.BOSS || role === constants.ROLE.NURSE_MANAGER
   },
 
   canDeletePersonFromRoom: function () {

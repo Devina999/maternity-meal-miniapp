@@ -1,12 +1,12 @@
 <wxs module="u">
-var sName = {pending:'待制作',cooking:'制作中',completed:'已完成',distributed:'已分餐'};
-var sColor = {pending:'#bbb',cooking:'#FF9F43',completed:'#FF6B9D',distributed:'#A29BFE'};
+var sName = {preparing:'制作中',completed:'制作完成',served:'上菜完成'};
+var sColor = {preparing:'#FF9F43',completed:'#FF6B9D',served:'#A29BFE'};
 module.exports = { n: sName, c: sColor };
 </wxs>
 
 <view class="pb-container">
   <!-- 日期 -->
-  <view class="pb-date">📅 {{date}}</view>
+  <view class="pb-date">📅 {{date}}（今日）</view>
 
   <!-- 餐别切换 -->
   <view class="pb-tabs">
@@ -19,66 +19,75 @@ module.exports = { n: sName, c: sColor };
 
   <!-- 统计 -->
   <view class="pb-stats">
-    <view class="pb-stat"><text class="pb-stat-num">{{stats.pending}}</text>待制作</view>
-    <view class="pb-stat"><text class="pb-stat-num">{{stats.cooking}}</text>制作中</view>
-    <view class="pb-stat"><text class="pb-stat-num">{{stats.completed}}</text>已完成</view>
-    <view class="pb-stat"><text class="pb-stat-num">{{stats.distributed}}</text>已分餐</view>
+    <view class="pb-stat"><text class="pb-stat-num">{{stats.preparing}}</text>制作中</view>
+    <view class="pb-stat"><text class="pb-stat-num">{{stats.completed}}</text>制作完成</view>
+    <view class="pb-stat"><text class="pb-stat-num">{{stats.served}}</text>上菜完成</view>
   </view>
 
-  <!-- 空状态 -->
-  <view class="empty-state" wx:if="{{assignments.length === 0}}">
+  <!-- 空状态：未发布菜单 -->
+  <view class="empty-state" wx:if="{{!menu}}">
     <view class="empty-icon">📋</view>
     <view>暂无备餐数据</view>
-    <view class="empty-hint">请先发布今日餐单</view>
+    <view class="empty-hint">请先在每日菜单中发布今日餐单</view>
   </view>
 
-  <!-- ===== 菜品维度汇总表 ===== -->
-  <view class="section" wx:if="{{dishTable.length > 0}}">
-    <view class="section-title">📊 备餐份数总览</view>
-    <view class="dish-summary-table">
-      <!-- 表头 -->
-      <view class="table-header">
-        <view class="th-dish">菜品</view>
-        <view class="th-portion">准备份数</view>
-        <view class="th-excluded">排除房间</view>
-        <view class="th-reason">冲突原因</view>
-      </view>
-      <!-- 表行 -->
-      <view class="table-row" wx:for="{{dishTable}}" wx:key="dish_id">
-        <view class="td-dish">
-          <text class="dish-dot">🍽️</text> {{item.dish_name}}
+  <!-- 菜品制作状态卡片 -->
+  <view class="section" wx:if="{{dishes.length > 0}}">
+    <view class="section-title">📊 菜品制作进度</view>
+    <view class="dish-card" wx:for="{{dishes}}" wx:key="dish_id">
+      <!-- 菜品名 + 状态标签 -->
+      <view class="dish-card-top">
+        <view class="dish-name">🍽️ {{item.dish_name}}</view>
+        <view class="dish-badge" style="background:{{u.c(item.status)}}">
+          {{u.n(item.status)}}
         </view>
-        <view class="td-portion">
-          <text class="portion-num">{{item.portion}}</text>
-        </view>
-        <view class="td-excluded">{{item.excludedRooms}}</view>
-        <view class="td-reason">{{item.exclusionDetails || '—'}}</view>
       </view>
-    </view>
-  </view>
 
-  <!-- ===== 房间制作状态卡片 ===== -->
-  <view class="section" wx:if="{{assignments.length > 0}}">
-    <view class="section-title">📋 房间制作进度</view>
-    <view class="pb-card" wx:for="{{assignments}}" wx:key="_id">
-      <view class="pb-card-top">
-        <view>
-          <text class="pb-room">{{item.room_number || '?'}}号房</text>
-          <text class="pb-mom" wx:if="{{item.mother_name}}"> · {{item.mother_name}}</text>
+      <!-- 进度条 -->
+      <view class="progress-wrap">
+        <view class="progress-bar">
+          <view class="progress-fill" style="width:{{item.progress}}%; background:{{u.c(item.status)}};"></view>
         </view>
-        <view class="pb-badge" style="background:{{u.c(item.production_status || 'pending')}}">
-          {{u.n(item.production_status || 'pending')}}
-        </view>
+        <text class="progress-text">{{item.progress}}%</text>
       </view>
-      <view class="pb-dishes">🍽️ {{item.dishNames}}</view>
-      <view class="pb-excluded" wx:if="{{item.excludedNames}}">✗ 已排除：{{item.excludedNames}}</view>
-      <view class="pb-excluded-detail" wx:if="{{item.exclusionDetails}}">⚠️ {{item.exclusionDetails}}</view>
-      <view class="pb-cooking" wx:if="{{item.cooking_notes}}">🔶 {{item.cooking_notes}}</view>
 
-      <view class="pb-actions" wx:if="{{canUpdateStatus && (item.production_status || 'pending') !== 'distributed'}}">
-        <button class="pb-btn" wx:if="{{(item.production_status || 'pending') === 'pending'}}" data-id="{{item._id}}" data-status="cooking" bindtap="onStatusChange">开始制作</button>
-        <button class="pb-btn cooking" wx:if="{{(item.production_status || 'pending') === 'cooking'}}" data-id="{{item._id}}" data-status="completed" bindtap="onStatusChange">标记完成</button>
-        <button class="pb-btn done" wx:if="{{(item.production_status || 'pending') === 'completed'}}" data-id="{{item._id}}" data-status="distributed" bindtap="onStatusChange">标记已分餐</button>
+      <!-- 操作按钮 -->
+      <view class="dish-actions">
+        <button
+          wx:if="{{item.status === 'preparing' && canUpdateToCompleted}}"
+          class="pb-btn completed"
+          data-dish-id="{{item.dish_id}}"
+          data-status="completed"
+          bindtap="onStatusChange"
+        >标记制作完成</button>
+
+        <button
+          wx:if="{{item.status === 'completed' && canUpdateToServed}}"
+          class="pb-btn served"
+          data-dish-id="{{item.dish_id}}"
+          data-status="served"
+          bindtap="onStatusChange"
+        >标记上菜完成</button>
+
+        <button
+          wx:if="{{item.status === 'completed' && canUndo}}"
+          class="pb-btn undo"
+          data-dish-id="{{item.dish_id}}"
+          data-status="preparing"
+          bindtap="onStatusChange"
+        >撤销制作完成</button>
+
+        <button
+          wx:if="{{item.status === 'served' && canUndo}}"
+          class="pb-btn undo"
+          data-dish-id="{{item.dish_id}}"
+          data-status="completed"
+          bindtap="onStatusChange"
+        >撤销上菜完成</button>
+
+        <view wx:if="{{item.status === 'preparing' && !canUpdateToCompleted}}" class="no-perm-hint">需后厨/主厨/管理员操作</view>
+        <view wx:if="{{item.status === 'completed' && !canUpdateToServed && !canUndo}}" class="no-perm-hint">需护士/前厅经理/管理员操作</view>
+        <view wx:if="{{item.status === 'served' && !canUndo}}" class="no-perm-hint">制作流程已完成</view>
       </view>
     </view>
   </view>

@@ -16,10 +16,12 @@
   color: #999;
 }
 
+.user-actions { display: flex; gap: 20rpx; }
 .user-action {
   font-size: 24rpx;
   color: #C4A5A5;
 }
+.user-action.delete { color: #D4A5A5; }
 
 .invite-result {
   text-align: center;

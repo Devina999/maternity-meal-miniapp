@@ -19,7 +19,7 @@
 
       <!-- 后厨回复 -->
       <view class="kitchen-reply" wx:if="{{item.kitchen_response}}">
-        <view class="reply-label">后厨回复：</view>
+        <view class="reply-label">{{item.kitchen_responded_role || '员工'}}回复：</view>
         <view class="reply-text">{{item.kitchen_response}}</view>
       </view>
       <view class="reply-btn" wx:if="{{canRespond && !item.kitchen_acknowledged}}" data-id="{{item._id}}" bindtap="onRespond">

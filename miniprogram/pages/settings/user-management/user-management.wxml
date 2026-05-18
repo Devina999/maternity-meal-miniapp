@@ -12,8 +12,13 @@
         </view>
       </view>
     </view>
-    <view class="user-action" data-id="{{item._id}}" bindtap="onToggleUser">
-      {{item.is_active ? '禁用此用户' : '启用此用户'}}
+    <view class="user-actions">
+      <view class="user-action" data-id="{{item._id}}" bindtap="onToggleUser">
+        {{item.is_active ? '禁用此用户' : '启用此用户'}}
+      </view>
+      <view class="user-action delete" wx:if="{{canDelete}}" data-id="{{item._id}}" bindtap="onDeleteUser">
+        删除用户
+      </view>
     </view>
   </view>
 
@@ -31,8 +36,8 @@
           </view>
           <view class="form-group">
             <view class="form-label">角色</view>
-            <picker mode="selector" range="{{roles}}" range-key="label" bindchange="onRoleChange">
-              <view class="form-input">{{roles[0].label}}</view>
+            <picker mode="selector" range="{{roles}}" range-key="label" value="{{selectedRoleIndex}}" bindchange="onRoleChange">
+              <view class="form-input">{{roles[selectedRoleIndex].label}}</view>
             </picker>
           </view>
           <button class="btn-primary" bindtap="onGenerateInvite">生成邀请码</button>

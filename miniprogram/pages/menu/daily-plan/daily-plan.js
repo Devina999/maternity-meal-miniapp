@@ -1,6 +1,6 @@
 const app = getApp()
 const cloud = require('../../../utils/cloud')
-const { MEAL_TYPE, MEAL_TYPE_NAME } = require('../../../utils/constants')
+const { MEAL_TYPE, MEAL_TYPE_NAME, DISH_PRODUCTION_STATUS } = require('../../../utils/constants')
 const dateHelper = require('../../../utils/date-helper')
 
 // 客户端的忌口匹配逻辑（精简版，用于份数预览）
@@ -42,18 +42,21 @@ Page({
     assignments: [],
     canEdit: false,
     canEditPast: false,
+    canCancelMenu: false,
     isPast: false,
     totalRooms: 0,
-    portionPreview: []   // [{dish_id, dish_name, portion, excludedRooms, reason}]
+    portionPreview: [],  // [{dish_id, dish_name, portion, excludedRooms, reason}]
+    selectedDishNames: [] // 只读模式下预计算的菜品名列表
   },
 
   onShow() {
     const role = app.getRole()
     const isPast = this.data.date < dateHelper.getToday()
-    const isSuperUser = role === 'super_admin' || role === 'boss' || role === 'head_chef'
+    const canEditMenu = role === 'super_admin' || role === 'boss' || role === 'head_chef'
     this.setData({
-      canEdit: !isPast || isSuperUser,
-      canEditPast: isSuperUser,
+      canEdit: canEditMenu,
+      canEditPast: canEditMenu,
+      canCancelMenu: role === 'super_admin' || role === 'boss' || role === 'head_chef' || role === 'nurse_manager',
       isPast
     })
     this.loadData()
@@ -73,10 +76,14 @@ Page({
 
       const current = menuMap[this.data.activeMealType]
       const selectedDishIds = current ? (current.dish_ids || []) : []
+      const dishNameMap = {}
+      allDishes.forEach(d => { dishNameMap[d._id] = d.name })
+      const selectedDishNames = selectedDishIds.map(id => dishNameMap[id] || '未知菜品')
 
       this.setData({
         menus: menuMap,
         selectedDishIds,
+        selectedDishNames,
         allDishes,
         totalRooms: rooms.length
       })
@@ -88,9 +95,7 @@ Page({
         this.setData({ portionPreview: [] })
       }
 
-      if (this.data.canEdit) {
-        this.loadAssignments()
-      }
+      this.loadAssignments()
     } catch (err) {
       console.error('加载餐单失败', err)
     }
@@ -181,12 +186,12 @@ Page({
     const newDate = e.detail.value
     const isPast = newDate < dateHelper.getToday()
     const role = app.getRole()
-    const isSuperUser = role === 'super_admin' || role === 'boss' || role === 'head_chef'
+    const canEditMenu = role === 'super_admin' || role === 'boss' || role === 'head_chef'
     this.setData({
       date: newDate,
       isPast,
-      canEdit: !isPast || isSuperUser,
-      canEditPast: isSuperUser
+      canEdit: canEditMenu,
+      canEditPast: canEditMenu
     }, () => this.loadData())
   },
 
@@ -197,6 +202,8 @@ Page({
     this.setData({ activeMealType: type, selectedDishIds })
     if (this.data.canEdit) {
       this.loadAssignments()
+    } else {
+      this.loadData()
     }
   },
 
@@ -273,6 +280,12 @@ Page({
       return
     }
 
+    // 当日该餐别已发布过，不允许再次发布
+    if (current.confirmed_at) {
+      wx.showToast({ title: '今日该餐别已发布过，不可再次发布', icon: 'none' })
+      return
+    }
+
     wx.showModal({
       title: '确认发布',
       content: '确认后将自动为每个房间匹配菜品（排除忌口），并同步扣减食材库存，确定吗？',
@@ -280,7 +293,20 @@ Page({
         if (res.confirm) {
           wx.showLoading({ title: '正在匹配...' })
           try {
-            await cloud.updateDailyMenu(current._id, { status: 'confirmed', updated_at: new Date() })
+            const dishProduction = {}
+            current.dish_ids.forEach(did => {
+              dishProduction[did] = {
+                status: DISH_PRODUCTION_STATUS.PREPARING,
+                updated_by: app.globalData.user._id,
+                updated_at: new Date()
+              }
+            })
+            await cloud.updateDailyMenu(current._id, {
+              status: 'confirmed',
+              confirmed_at: new Date(),
+              dish_production: dishProduction,
+              updated_at: new Date()
+            })
 
             const result = await wx.cloud.callFunction({
               name: 'generateDailyAssignments',
@@ -295,6 +321,13 @@ Page({
 
             if (result.result && result.result.success) {
               const r = result.result
+              // 保存库存扣减记录到菜单，供取消发布时恢复
+              if (r.stockChanges && r.stockChanges.length > 0) {
+                await cloud.updateDailyMenu(current._id, {
+                  stock_changes: r.stockChanges,
+                  updated_at: new Date()
+                })
+              }
               let msg = `发布成功! ${r.totalRooms}间房已匹配`
               if (r.stockChanges && r.stockChanges.length > 0) {
                 const alerts = r.stockChanges.filter(s => s.alert)
@@ -312,6 +345,49 @@ Page({
             wx.hideLoading()
             console.error('匹配失败', err)
             wx.showToast({ title: '匹配失败: ' + (err.message || '未知错误'), icon: 'none' })
+          }
+        }
+      }
+    })
+  },
+
+  onCancelMenu() {
+    const current = this.getCurrentMenu()
+    if (!current || current.status !== 'confirmed') return
+
+    wx.showModal({
+      title: '取消发布',
+      content: '取消发布后，食材库存将恢复，所有房间分配将被删除，制作进度将被清除。确定要继续吗？',
+      success: async (res) => {
+        if (res.confirm) {
+          wx.showLoading({ title: '取消中...' })
+          try {
+            const user = app.globalData.user
+            const result = await wx.cloud.callFunction({
+              name: 'cancelMenuPublish',
+              data: {
+                institution_id: app.globalData.institutionId,
+                date: this.data.date,
+                meal_type: this.data.activeMealType,
+                user_id: user._id,
+                user_name: user.name || '',
+                user_role: user.role
+              }
+            })
+
+            wx.hideLoading()
+
+            if (result.result && result.result.success) {
+              wx.showToast({ title: '已取消发布，库存已恢复', icon: 'success' })
+            } else {
+              wx.showToast({ title: result.result.message || '取消失败', icon: 'none' })
+            }
+            this.loadData()
+            this.loadAssignments()
+          } catch (err) {
+            wx.hideLoading()
+            console.error('取消发布失败', err)
+            wx.showToast({ title: '取消失败: ' + (err.message || '未知错误'), icon: 'none' })
           }
         }
       }
