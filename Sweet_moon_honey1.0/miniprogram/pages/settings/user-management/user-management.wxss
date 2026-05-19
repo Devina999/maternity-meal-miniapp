@@ -1,0 +1,57 @@
+.user-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.user-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  margin-bottom: 4rpx;
+}
+
+.user-role {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.user-actions { display: flex; gap: 20rpx; }
+.user-action {
+  font-size: 24rpx;
+  color: #C4A5A5;
+}
+.user-action.delete { color: #D4A5A5; }
+
+.invite-result {
+  text-align: center;
+  padding: 30rpx 0;
+}
+
+.invite-label {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.invite-code {
+  font-size: 56rpx;
+  font-weight: bold;
+  color: #E8B4B8;
+  letter-spacing: 12rpx;
+  padding: 20rpx;
+  background: #f0f5ff;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.invite-hint {
+  font-size: 24rpx;
+  color: #999;
+  line-height: 1.5;
+}
+
+.invite-result {
+  text-align: center;
+  padding: 30rpx 0;
+}

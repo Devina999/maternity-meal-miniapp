@@ -1,0 +1,117 @@
+<view class="container">
+  <!-- 房间信息 -->
+  <view class="card" wx:if="{{roomInfo}}">
+    <view class="room-info-header">
+      <text class="room-label">{{roomInfo.room_number}}号房</text>
+      <text wx:if="{{roomInfo.mother_name}}"> · {{roomInfo.mother_name}}</text>
+    </view>
+  </view>
+
+  <!-- 已选标签展示 -->
+  <view class="card" wx:if="{{selectedTags.length > 0}}">
+    <view class="section-title">已选忌口标签（{{selectedTags.length}}项）</view>
+    <view class="selected-tag-row">
+      <view
+        class="selected-tag-item"
+        wx:for="{{selectedTags}}"
+        wx:key="*this"
+        data-tag="{{item}}"
+        bindtap="onTagToggle"
+      >{{item}} ✕</view>
+    </view>
+    <view class="hint-text">点击标签可取消选择</view>
+  </view>
+
+  <!-- 标签搜索 -->
+  <view class="card">
+    <view class="section-title">忌口标签（点击选择/取消）</view>
+    <view class="form-group">
+      <input
+        class="form-input search-input"
+        placeholder="🔍 搜索标签（如：海鲜、辣椒）"
+        value="{{tagSearch}}"
+        bindinput="onTagSearchInput"
+      />
+    </view>
+    <view class="tag-grid">
+      <view
+        class="tag-select-item {{selectedTags.indexOf(item) > -1 ? 'selected' : ''}}"
+        wx:for="{{filteredTags}}"
+        wx:key="*this"
+        data-tag="{{item}}"
+        bindtap="onTagToggle"
+      >{{item}}</view>
+    </view>
+    <view class="no-tag-hint" wx:if="{{filteredTags.length === 0}}">未找到匹配标签，请在下方自定义添加</view>
+  </view>
+
+  <!-- 自定义标签 -->
+  <view class="card custom-card">
+    <view class="section-title">✨ 自定义忌口（标签库没有的）</view>
+    <view class="custom-tag-row">
+      <input
+        class="form-input custom-tag-input"
+        placeholder="输入忌口食物名，如：芒果"
+        value="{{customTagInput}}"
+        bindinput="onCustomTagInput"
+        confirm-type="done"
+        bindconfirm="onAddCustomTag"
+      />
+      <button class="btn-primary btn-sm custom-tag-btn" bindtap="onAddCustomTag">添加</button>
+    </view>
+    <view class="hint-text">输入标签库中没有的忌口食物，自动转为标签并存入标签库</view>
+    <!-- 显示已有的自定义标签 -->
+    <view class="custom-lib" wx:if="{{customTagLib.length > 0}}">
+      <view class="custom-lib-title">本机构已添加的自定义标签：</view>
+      <view class="tag-grid">
+        <view
+          class="tag-select-item custom-tag-item {{selectedTags.indexOf(item) > -1 ? 'selected' : ''}}"
+          wx:for="{{customTagLib}}"
+          wx:key="*this"
+          data-tag="{{item}}"
+          bindtap="onTagToggle"
+        >{{item}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 文字备注 + 自动识别的标签建议 -->
+  <view class="card">
+    <view class="form-group">
+      <view class="form-label">额外备注（输入文字自动识别标签）</view>
+      <textarea
+        class="form-textarea"
+        placeholder="如：不吃茄子，汤里不要放香菜（输入后自动匹配上方标签）"
+        value="{{customNotes}}"
+        bindinput="onCustomNotesInput"
+      />
+    </view>
+    <view class="form-group">
+      <view class="form-label">🔶 个性化制作要求</view>
+      <textarea
+        class="form-textarea cooking-input"
+        placeholder="如：少盐，不加姜（输入后自动匹配标签）"
+        value="{{cookingNotes}}"
+        bindinput="onCookingNotesInput"
+      />
+    </view>
+
+    <!-- 自动识别的标签建议 -->
+    <view class="auto-match-section" wx:if="{{autoMatchedTags.length > 0}}">
+      <view class="auto-match-title">💡 从文本中识别到以下标签，点击快速添加：</view>
+      <view class="tag-grid auto-grid">
+        <view
+          class="auto-tag-item"
+          wx:for="{{autoMatchedTags}}"
+          wx:key="*this"
+          data-tag="{{item}}"
+          bindtap="onAddAutoTag"
+        >+ {{item}}</view>
+      </view>
+    </view>
+  </view>
+
+  <button class="btn-primary" bindtap="onSubmit">
+    {{isEdit ? '更新忌口' : '保存忌口'}}
+  </button>
+</view>

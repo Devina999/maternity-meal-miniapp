@@ -1,0 +1,32 @@
+<view class="container">
+  <view class="card">
+    <view class="form-group">
+      <view class="form-label">房间号 *</view>
+      <input class="form-input" placeholder="如：301" value="{{form.room_number}}" data-field="room_number" bindinput="onInput"/>
+    </view>
+    <view class="form-group">
+      <view class="form-label">宝妈姓名 *</view>
+      <input class="form-input" placeholder="请输入宝妈姓名" value="{{form.mother_name}}" data-field="mother_name" bindinput="onInput"/>
+    </view>
+    <view class="form-group">
+      <view class="form-label">入住日期</view>
+      <picker mode="date" value="{{form.check_in_date}}" data-field="check_in_date" bindchange="onDateChange">
+        <view class="form-input picker-val">{{form.check_in_date || '请选择'}}</view>
+      </picker>
+    </view>
+    <view class="form-group">
+      <view class="form-label">预计离店日期</view>
+      <picker mode="date" value="{{form.check_out_date}}" data-field="check_out_date" bindchange="onDateChange">
+        <view class="form-input picker-val">{{form.check_out_date || '请选择'}}</view>
+      </picker>
+    </view>
+    <view class="form-group">
+      <view class="form-label">备注</view>
+      <textarea class="form-textarea" placeholder="如：剖腹产需特殊营养" value="{{form.notes}}" data-field="notes" bindinput="onInput"/>
+    </view>
+  </view>
+
+  <button class="btn-primary" bindtap="onSubmit">
+    {{isEdit ? '保存修改' : '添加房间'}}
+  </button>
+</view>

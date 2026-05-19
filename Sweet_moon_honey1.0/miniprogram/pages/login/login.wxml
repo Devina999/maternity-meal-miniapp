@@ -1,0 +1,46 @@
+<view class="login-container">
+  <view class="login-header">
+    <view class="login-logo">🍼</view>
+    <view class="login-title">月子中心餐饮管理</view>
+    <view class="login-subtitle">精准备餐 · 杜绝错餐</view>
+  </view>
+
+  <view class="login-body">
+    <!-- 首次登录：微信一键登录 -->
+    <block wx:if="{{!showInviteInput}}">
+      <view class="login-info">
+        <view class="info-icon">🔒</view>
+        <view class="info-text">仅限授权人员使用</view>
+        <view class="info-desc">登录需由管理员预先添加账号</view>
+      </view>
+      <button class="login-btn" bindtap="handleLogin" loading="{{loading}}" disabled="{{loading}}">
+        <text>{{loading ? '登录中...' : '微信一键登录'}}</text>
+      </button>
+    </block>
+
+    <!-- 新用户：输入邀请码 -->
+    <block wx:if="{{showInviteInput}}">
+      <view class="register-hint">
+        <view class="hint-icon">📝</view>
+        <view class="hint-text">首次使用，请输入管理员提供的邀请码</view>
+      </view>
+      <view class="form-group">
+        <input
+          class="form-input invite-input"
+          placeholder="请输入邀请码"
+          value="{{inviteCode}}"
+          bindinput="onInviteCodeInput"
+          maxlength="20"
+        />
+      </view>
+      <button class="login-btn" bindtap="handleRegister" loading="{{loading}}" disabled="{{loading}}">
+        <text>{{loading ? '注册中...' : '确认注册'}}</text>
+      </button>
+      <view class="back-link" bindtap="handleLogin">重新检测账号</view>
+    </block>
+  </view>
+
+  <view class="login-footer">
+    <text>仅供内部员工使用</text>
+  </view>
+</view>

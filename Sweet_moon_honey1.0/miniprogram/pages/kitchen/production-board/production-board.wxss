@@ -1,0 +1,68 @@
+.pb-container { padding: 20rpx; padding-bottom: 40rpx; }
+
+.pb-date { text-align: center; font-size: 26rpx; color: #bbb; margin-bottom: 12rpx; }
+
+.pb-tabs { display: flex; gap: 8rpx; margin-bottom: 16rpx; }
+.pb-tab {
+  flex:1; text-align:center; padding: 14rpx 0; background: #fff;
+  border-radius: 25rpx; font-size: 26rpx; color: #999;
+}
+.pb-tab.active { background: #E8B4B8; color: #fff; font-weight: bold; }
+
+.pb-stats { display: flex; gap: 10rpx; margin-bottom: 20rpx; }
+.pb-stat {
+  flex:1; text-align:center; background: #fff; border-radius: 14rpx;
+  padding: 14rpx 0; font-size: 22rpx; color: #bbb;
+}
+.pb-stat-num { display: block; font-size: 34rpx; font-weight: bold; color: #E8B4B8; margin-bottom: 4rpx; }
+
+/* 分区标题 */
+.section { margin-bottom: 24rpx; }
+.section-title {
+  font-size: 28rpx; font-weight: bold; color: #555;
+  padding: 12rpx 0; margin-bottom: 12rpx;
+}
+
+/* 菜品卡片 */
+.dish-card {
+  background: #fff; border-radius: 16rpx; padding: 24rpx;
+  margin-bottom: 16rpx; border-left: 8rpx solid #E8B4B8;
+  box-shadow: 0 2rpx 12rpx rgba(255,107,157,0.08);
+}
+.dish-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16rpx; }
+.dish-name { font-size: 30rpx; font-weight: bold; color: #333; }
+.dish-badge { padding: 6rpx 18rpx; border-radius: 20rpx; color: #fff; font-size: 22rpx; }
+
+/* 进度条 */
+.progress-wrap { display: flex; align-items: center; gap: 16rpx; margin-bottom: 16rpx; }
+.progress-bar {
+  flex: 1; height: 16rpx; background: #F0EDF2;
+  border-radius: 8rpx; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; border-radius: 8rpx;
+  transition: width 0.3s ease;
+}
+.progress-text {
+  font-size: 24rpx; font-weight: bold; color: #888;
+  min-width: 60rpx; text-align: right;
+}
+
+/* 操作区 */
+.dish-actions { display: flex; gap: 12rpx; flex-wrap: wrap; }
+.pb-btn {
+  flex:1; min-width: 200rpx; padding: 14rpx 0; color: #fff;
+  border-radius: 25rpx; font-size: 24rpx; border: none; text-align: center;
+}
+.pb-btn.completed { background: #FF6B9D; }
+.pb-btn.served { background: #A29BFE; }
+.pb-btn.undo { background: #fff; color: #999; border: 1rpx solid #ddd; }
+
+.no-perm-hint {
+  flex:1; text-align:center; padding: 14rpx 0; font-size: 22rpx; color: #ccc;
+}
+
+/* 空状态 */
+.empty-state { text-align: center; padding: 80rpx 0; color: #999; font-size: 28rpx; }
+.empty-icon { font-size: 80rpx; margin-bottom: 16rpx; }
+.empty-hint { font-size: 24rpx; color: #ccc; margin-top: 10rpx; }

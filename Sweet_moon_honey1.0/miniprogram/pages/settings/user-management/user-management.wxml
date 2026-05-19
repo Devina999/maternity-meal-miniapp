@@ -1,0 +1,58 @@
+<view class="container">
+  <!-- 用户列表 -->
+  <view class="card" wx:for="{{users}}" wx:key="_id">
+    <view class="user-row">
+      <view class="user-info">
+        <view class="user-name">{{item.name}}</view>
+        <view class="user-role">{{item.roleName}}</view>
+      </view>
+      <view class="user-status">
+        <view class="tag {{item.is_active ? 'tag-green' : 'tag-gray'}}">
+          {{item.is_active ? '正常' : '已禁用'}}
+        </view>
+      </view>
+    </view>
+    <view class="user-actions">
+      <view class="user-action" data-id="{{item._id}}" bindtap="onToggleUser">
+        {{item.is_active ? '禁用此用户' : '启用此用户'}}
+      </view>
+      <view class="user-action delete" wx:if="{{canDelete}}" data-id="{{item._id}}" bindtap="onDeleteUser">
+        删除用户
+      </view>
+    </view>
+  </view>
+
+  <button class="btn-primary" bindtap="onShowInviteForm">+ 邀请新用户</button>
+
+  <!-- 邀请弹窗 -->
+  <view class="modal-mask" wx:if="{{showInviteForm}}" bindtap="onCancel">
+    <view class="modal-content" catchtap="noop">
+      <view class="modal-title">邀请新用户</view>
+      <view class="modal-body">
+        <block wx:if="{{!inviteCode}}">
+          <view class="form-group">
+            <view class="form-label">姓名</view>
+            <input class="form-input" value="{{inviteForm.name}}" bindinput="onNameInput" placeholder="请输入员工姓名"/>
+          </view>
+          <view class="form-group">
+            <view class="form-label">角色</view>
+            <picker mode="selector" range="{{roles}}" range-key="label" value="{{selectedRoleIndex}}" bindchange="onRoleChange">
+              <view class="form-input">{{roles[selectedRoleIndex].label}}</view>
+            </picker>
+          </view>
+          <button class="btn-primary" bindtap="onGenerateInvite">生成邀请码</button>
+        </block>
+        <block wx:else>
+          <view class="invite-result">
+            <view class="invite-label">邀请码已生成</view>
+            <view class="invite-code">{{inviteCode}}</view>
+            <view class="invite-hint">将此邀请码发送给员工，对方在登录时输入即可注册</view>
+          </view>
+        </block>
+      </view>
+      <view class="modal-footer">
+        <button class="btn-outline" bindtap="onCancel">关闭</button>
+      </view>
+    </view>
+  </view>
+</view>

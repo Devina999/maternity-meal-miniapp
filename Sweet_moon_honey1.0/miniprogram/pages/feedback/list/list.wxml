@@ -1,0 +1,34 @@
+<view class="container">
+  <picker mode="date" value="{{date}}" bindchange="onDateChange">
+    <view class="date-filter">📅 {{date || '全部日期'}}</view>
+  </picker>
+
+  <view wx:if="{{feedbacks.length > 0}}">
+    <view class="card feedback-card" wx:for="{{feedbacks}}" wx:key="_id">
+      <view class="feedback-header">
+        <view>
+          <text class="room-label">{{item.room_number || '未知'}}号房</text>
+          <text class="meal-label">{{item.meal_type === 'breakfast' ? '早餐' : item.meal_type === 'lunch' ? '午餐' : item.meal_type === 'dinner' ? '晚餐' : '加餐'}}</text>
+        </view>
+        <view class="stars">
+          <text wx:for="{{[1,2,3,4,5]}}" wx:key="*this" class="{{item.rating >= item ? 'star-on' : 'star-off'}}">{{item.rating >= item ? '★' : '☆'}}</text>
+        </view>
+      </view>
+      <view class="feedback-text" wx:if="{{item.feedback_text}}">{{item.feedback_text}}</view>
+      <view class="feedback-meta">{{item.created_at}}</view>
+
+      <!-- 后厨回复 -->
+      <view class="kitchen-reply" wx:if="{{item.kitchen_response}}">
+        <view class="reply-label">{{item.kitchen_responded_role || '员工'}}回复：</view>
+        <view class="reply-text">{{item.kitchen_response}}</view>
+      </view>
+      <view class="reply-btn" wx:if="{{canRespond && !item.kitchen_acknowledged}}" data-id="{{item._id}}" bindtap="onRespond">
+        回复反馈
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:if="{{feedbacks.length === 0}}">
+    <view>暂无反馈记录</view>
+  </view>
+</view>

@@ -1,0 +1,58 @@
+<view class="container">
+  <view class="card" wx:for="{{ingredients}}" wx:key="_id">
+    <view class="ing-header">
+      <view class="ing-name">{{item.name}}</view>
+      <view class="tag tag-blue">{{item.category}}</view>
+    </view>
+    <view class="ing-stock">
+      <view class="stock-bar">
+        <view class="stock-fill {{item.stock <= item.stock_alert_threshold ? 'low' : ''}}" style="width: {{item.stock > 0 ? Math.min(100, item.stock / item.stock_alert_threshold * 50) : 0}}%"></view>
+      </view>
+      <view class="stock-text">
+        库存：{{item.stock}} {{item.unit}}
+        <text class="alert-text" wx:if="{{item.stock <= item.stock_alert_threshold}}"> ⚠️ 库存不足</text>
+      </view>
+    </view>
+    <view class="ing-actions" wx:if="{{canEdit}}">
+      <text class="action-link" data-id="{{item._id}}" bindtap="onEdit">编辑</text>
+      <text class="action-link danger" data-id="{{item._id}}" bindtap="onDelete">删除</text>
+    </view>
+  </view>
+
+  <button class="btn-primary" bindtap="onShowForm" wx:if="{{canEdit}}">+ 添加食材</button>
+
+  <!-- 添加/编辑弹窗 -->
+  <view class="modal-mask" wx:if="{{showForm}}" bindtap="onCancel">
+    <view class="modal-content" catchtap="noop">
+      <view class="modal-title">{{editId ? '编辑食材' : '添加食材'}}</view>
+      <scroll-view scroll-y class="modal-body">
+        <view class="form-group">
+          <view class="form-label">食材名称</view>
+          <input class="form-input" value="{{form.name}}" data-field="name" bindinput="onInput" placeholder="如：虾仁"/>
+        </view>
+        <view class="form-group">
+          <view class="form-label">分类</view>
+          <picker mode="selector" range="{{categories}}" bindchange="onCategoryChange">
+            <view class="form-input">{{form.category}}</view>
+          </picker>
+        </view>
+        <view class="form-group">
+          <view class="form-label">单位</view>
+          <input class="form-input" value="{{form.unit}}" data-field="unit" bindinput="onInput" placeholder="如：克"/>
+        </view>
+        <view class="form-group">
+          <view class="form-label">当前库存</view>
+          <input class="form-input" type="number" value="{{form.stock}}" data-field="stock" bindinput="onInput"/>
+        </view>
+        <view class="form-group">
+          <view class="form-label">预警阈值</view>
+          <input class="form-input" type="number" value="{{form.stock_alert_threshold}}" data-field="stock_alert_threshold" bindinput="onInput"/>
+        </view>
+      </scroll-view>
+      <view class="modal-footer">
+        <button class="btn-outline" bindtap="onCancel">取消</button>
+        <button class="btn-primary" bindtap="onSubmit">保存</button>
+      </view>
+    </view>
+  </view>
+</view>

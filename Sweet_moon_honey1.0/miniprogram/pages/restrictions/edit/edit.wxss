@@ -1,0 +1,103 @@
+.room-info-header {
+  font-size: 32rpx; font-weight: bold; margin-bottom: 8rpx;
+}
+
+.date-label { font-size: 24rpx; color: #999; }
+
+.section-title {
+  font-size: 28rpx; font-weight: bold; margin-bottom: 16rpx;
+}
+
+/* 搜索框 */
+.search-input {
+  background: #f9f9f9;
+  border-radius: 30rpx;
+  padding: 16rpx 24rpx;
+}
+
+/* 已选标签 */
+.selected-tag-row {
+  display: flex; flex-wrap: wrap; gap: 12rpx;
+}
+
+.selected-tag-item {
+  background: #C4A5A5; color: #fff;
+  padding: 10rpx 24rpx; border-radius: 30rpx;
+  font-size: 26rpx; font-weight: bold;
+}
+
+.hint-text {
+  font-size: 22rpx; color: #bbb; margin-top: 12rpx;
+}
+
+/* 标签网格 */
+.tag-grid {
+  display: flex; flex-wrap: wrap; gap: 12rpx;
+}
+
+.tag-select-item {
+  padding: 12rpx 24rpx; background: #f5f5f5;
+  border-radius: 10rpx; font-size: 24rpx; color: #666;
+  border: 2rpx solid transparent; transition: all 0.2s;
+}
+
+.tag-select-item.selected {
+  background: #F5E8E8; color: #C4A5A5; border-color: #C4A5A5;
+  font-weight: bold; transform: scale(1.05);
+}
+
+.no-tag-hint {
+  text-align: center; color: #ccc; font-size: 24rpx; padding: 20rpx 0;
+}
+
+/* 自动识别标签 */
+.auto-match-section {
+  margin-top: 24rpx; padding-top: 20rpx;
+  border-top: 2rpx dashed #D4C8B0;
+}
+
+.auto-match-title {
+  font-size: 24rpx; color: #D4BFA5; margin-bottom: 14rpx;
+}
+
+.auto-tag-item {
+  padding: 10rpx 20rpx; background: #F2EFE5;
+  color: #D4BFA5; border: 2rpx dashed #D4C8B0;
+  border-radius: 10rpx; font-size: 24rpx;
+}
+
+.auto-tag-item:active {
+  background: #D4C8B0; color: #fff; border-style: solid;
+}
+
+.cooking-input {
+  border-color: #D4BFA5; background: #FFFDF7;
+}
+
+/* 自定义标签 */
+.custom-card {
+  border: 2rpx dashed #E5DDE0;
+  background: #FFFAFD;
+}
+
+.custom-tag-row {
+  display: flex; gap: 16rpx; align-items: center;
+}
+
+.custom-tag-input {
+  flex: 1;
+}
+
+.custom-tag-btn {
+  flex-shrink: 0; padding: 16rpx 28rpx; margin-top: 0;
+  white-space: nowrap; font-size: 26rpx;
+}
+
+.custom-lib {
+  margin-top: 24rpx; padding-top: 20rpx;
+  border-top: 1rpx solid #F2EEF0;
+}
+
+.custom-lib-title {
+  font-size: 24rpx; color: #b0b0b0; margin-bottom: 14rpx;
+}

@@ -1,0 +1,188 @@
+.top-controls {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.date-picker {
+  font-size: 30rpx;
+  font-weight: bold;
+  margin-bottom: 16rpx;
+  text-align: center;
+}
+
+.meal-tabs {
+  display: flex;
+  gap: 12rpx;
+}
+
+.meal-tab {
+  flex: 1;
+  text-align: center;
+  padding: 14rpx 0;
+  background: #f5f5f5;
+  border-radius: 10rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.meal-tab.active {
+  background: #E8B4B8;
+  color: #fff;
+}
+
+.stats-card {
+  display: flex;
+  justify-content: space-around;
+  padding: 20rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+
+.dish-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.dish-item {
+  width: calc(50% - 6rpx);
+  background: #f9f9f9;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  position: relative;
+  border: 2rpx solid transparent;
+  box-sizing: border-box;
+}
+
+.dish-item.selected {
+  border-color: #E8B4B8;
+  background: #E8F4FD;
+}
+
+.dish-name {
+  font-size: 28rpx;
+  font-weight: bold;
+  margin-bottom: 4rpx;
+}
+
+.dish-category {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.check-mark {
+  position: absolute;
+  right: 12rpx;
+  top: 12rpx;
+  width: 36rpx;
+  height: 36rpx;
+  background: #E8B4B8;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20rpx;
+}
+
+.dish-readonly {
+  padding: 16rpx 0;
+  font-size: 28rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.empty-hint {
+  text-align: center;
+  color: #ccc;
+  padding: 30rpx;
+}
+
+.assignment-item {
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.assignment-room {
+  font-weight: bold;
+  margin-bottom: 6rpx;
+}
+
+.assignment-dishes {
+  font-size: 24rpx;
+  margin-bottom: 4rpx;
+}
+
+.assigned {
+  display: block;
+  color: #A5C4A5;
+  padding: 2rpx 0;
+}
+
+.excluded-dish {
+  display: block;
+  color: #C4A5A5;
+  padding: 2rpx 0;
+  text-decoration: line-through;
+}
+
+.cooking-tag {
+  font-size: 22rpx;
+  color: #D4BFA5;
+  margin-top: 4rpx;
+}
+
+/* ===== 历史只读模式 ===== */
+.history-meal-label {
+  font-size: 28rpx; font-weight: bold; color: #E8B4B8;
+  margin-bottom: 8rpx; padding-bottom: 8rpx;
+  border-bottom: 1rpx solid #F9F5F2;
+}
+.history-dish-list { line-height: 1.8; }
+.history-dish-name { font-size: 26rpx; color: #555; }
+.history-no-dish { font-size: 24rpx; color: #ccc; }
+
+/* ===== 历史编辑警告 ===== */
+.past-warning {
+  text-align: center; padding: 16rpx; margin-bottom: 16rpx;
+  background: #FFF8E1; color: #D4A574; border-radius: 10rpx;
+  font-size: 24rpx; border: 1rpx solid #F5E0B7;
+}
+
+/* ===== 份数预览表 ===== */
+.portion-table {
+  background: #fff; border-radius: 12rpx; overflow: hidden;
+  border: 1rpx solid #f0f0f0;
+}
+.portion-header {
+  display: flex; background: #F9F5F2;
+  padding: 16rpx 10rpx; font-size: 22rpx; font-weight: bold; color: #888;
+}
+.portion-row {
+  display: flex; padding: 14rpx 10rpx; border-bottom: 1rpx solid #fafafa;
+  align-items: center; font-size: 24rpx;
+}
+.portion-row:last-child { border-bottom: none; }
+
+.ph-dish, .pd-dish { flex: 0 0 150rpx; padding: 0 4rpx; }
+.ph-count, .pd-count { flex: 0 0 100rpx; text-align: center; padding: 0 4rpx; }
+.ph-excluded, .pd-excluded { flex: 0 0 140rpx; padding: 0 4rpx; }
+.ph-reason, .pd-reason { flex: 1; padding: 0 4rpx; }
+
+.pd-dish { font-weight: bold; color: #333; }
+.count-badge {
+  display: inline-block; background: #E8B4B8; color: #fff;
+  border-radius: 16rpx; padding: 4rpx 14rpx; font-size: 22rpx; font-weight: bold;
+}
+.pd-excluded { color: #C4A5A5; font-size: 22rpx; }
+.pd-reason { color: #999; font-size: 20rpx; line-height: 1.4; }

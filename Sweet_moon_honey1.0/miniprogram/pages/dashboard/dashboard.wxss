@@ -1,0 +1,124 @@
+.dashboard {
+  padding-bottom: 40rpx;
+}
+
+.welcome-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx 30rpx;
+  background: linear-gradient(135deg, #E8B4B8, #C4B5D4);
+  color: #fff;
+}
+
+.welcome-text {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 6rpx;
+}
+
+.welcome-date {
+  font-size: 24rpx;
+  opacity: 0.8;
+}
+
+.logout-btn {
+  font-size: 26rpx;
+  padding: 10rpx 24rpx;
+  border: 2rpx solid rgba(255,255,255,0.6);
+  border-radius: 20rpx;
+}
+
+.menu-group {
+  margin: 20rpx;
+}
+
+.group-title {
+  font-size: 28rpx;
+  color: #666;
+  padding: 10rpx 0;
+  display: flex;
+  align-items: center;
+}
+
+.group-icon {
+  margin-right: 10rpx;
+}
+
+.menu-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.menu-card {
+  width: calc(50% - 8rpx);
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-sizing: border-box;
+  position: relative;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
+}
+
+.menu-card:active {
+  background: #f5f5f5;
+}
+
+.menu-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.menu-desc {
+  font-size: 24rpx;
+  color: #999;
+  line-height: 1.4;
+}
+
+.menu-arrow {
+  position: absolute;
+  right: 16rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ccc;
+  font-size: 28rpx;
+}
+
+/* 角色模拟提示条 */
+.role-sim-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20rpx 20rpx 0;
+  padding: 18rpx 24rpx;
+  background: #FFF8E1;
+  border: 1rpx solid #F5E0B7;
+  border-radius: 12rpx;
+}
+.sim-hint { font-size: 24rpx; color: #D4A574; display: flex; align-items: center; }
+.sim-icon { margin-right: 8rpx; }
+.restore-btn {
+  font-size: 24rpx; color: #fff; background: #D4A574;
+  padding: 8rpx 20rpx; border-radius: 20rpx;
+}
+
+/* 角色切换器 */
+.role-switcher {
+  margin: 20rpx;
+  padding: 20rpx 24rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.switcher-label {
+  font-size: 26rpx; color: #666;
+}
+.switcher-picker {
+  font-size: 26rpx; color: #E8B4B8; font-weight: bold;
+  padding: 10rpx 24rpx; background: #F9F5F2;
+  border-radius: 20rpx; border: 1rpx solid #EED;
+}

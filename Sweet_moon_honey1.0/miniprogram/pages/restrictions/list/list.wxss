@@ -1,0 +1,79 @@
+.date-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+}
+
+.date-arrow {
+  padding: 10rpx 20rpx;
+  font-size: 28rpx;
+  color: #E8B4B8;
+}
+
+.date-text {
+  font-size: 32rpx;
+  font-weight: bold;
+  padding: 0 40rpx;
+}
+
+.room-restriction-card {
+  margin-bottom: 20rpx;
+}
+
+.room-restriction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.room-label {
+  font-size: 30rpx;
+  font-weight: bold;
+}
+
+.add-restriction-btn {
+  font-size: 24rpx;
+  color: #E8B4B8;
+  padding: 6rpx 16rpx;
+  border: 1rpx solid #E8B4B8;
+  border-radius: 20rpx;
+}
+
+.restriction-block {
+  padding: 16rpx 0;
+  border-top: 1rpx solid #f5f5f5;
+}
+
+.tag-row {
+  margin-bottom: 6rpx;
+}
+
+.custom-text {
+  font-size: 24rpx;
+  color: #666;
+  margin-top: 6rpx;
+}
+
+.cooking-text {
+  font-size: 24rpx;
+  color: #D4BFA5;
+  margin-top: 6rpx;
+}
+
+.marker {
+  margin-right: 4rpx;
+}
+
+.no-restriction {
+  padding: 20rpx 0;
+}
+
+.empty-hint {
+  color: #ccc;
+  font-size: 24rpx;
+}

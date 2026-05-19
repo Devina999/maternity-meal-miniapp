@@ -1,0 +1,133 @@
+<view class="container">
+  <!-- 菜品列表 -->
+  <view class="card dish-card-item" wx:for="{{dishes}}" wx:key="_id">
+    <view class="dish-header">
+      <view class="dish-name">{{item.name}}</view>
+      <view class="tag tag-blue">{{item.category}}</view>
+    </view>
+    <view class="dish-ingredients" wx:if="{{item.ingredients.length > 0}}">
+      <text class="ing-label-text">食材：</text>
+      <text class="ing-chip" wx:for="{{item.ingredients}}" wx:key="ingredient_id" wx:for-item="ing">
+        {{ing.name || '未知'}}
+        <text class="ing-amount">{{ing.amount}}</text>
+      </text>
+    </view>
+    <view class="dish-ingredients" wx:else>
+      <text class="no-ing">暂无绑定食材</text>
+    </view>
+    <view class="dish-actions" wx:if="{{canEdit}}">
+      <text class="action-link" data-id="{{item._id}}" bindtap="onEditDish">编辑</text>
+      <text class="action-link danger" data-id="{{item._id}}" bindtap="onDeleteDish">删除</text>
+    </view>
+  </view>
+
+  <button class="btn-primary" bindtap="onShowForm" wx:if="{{canEdit}}">+ 添加菜品</button>
+
+  <!-- 无菜品提示 -->
+  <view class="empty-state" wx:if="{{dishes.length === 0 && !showForm}}">
+    <view>暂无菜品，点击上方按钮添加</view>
+  </view>
+
+  <!-- 菜品编辑表单弹层 -->
+  <view class="modal-mask" wx:if="{{showForm}}" bindtap="onCancel">
+    <view class="modal-content" catchtap="noop">
+      <view class="modal-title">{{editId ? '编辑菜品' : '添加菜品'}}</view>
+      <scroll-view scroll-y class="modal-body">
+        <view class="form-group">
+          <view class="form-label">菜品名称 *</view>
+          <input class="form-input" value="{{form.name}}" bindinput="onNameInput" placeholder="如：清蒸鲈鱼"/>
+        </view>
+        <view class="form-group">
+          <view class="form-label">分类</view>
+          <picker mode="selector" range="{{categories}}" bindchange="onCategoryChange">
+            <view class="form-input picker-val">{{form.category || '请选择分类'}}</view>
+          </picker>
+        </view>
+
+        <!-- 已选食材 -->
+        <view class="form-group">
+          <view class="form-label">绑定食材</view>
+          <view class="selected-ings">
+            <view class="ing-tag-row" wx:for="{{form.ingredientSelections}}" wx:key="ingredient_id">
+              <view class="ing-name-tag">🍖 {{item.name}}</view>
+              <input class="ing-amount-input" type="number" value="{{item.amount}}" data-index="{{index}}" bindinput="onAmountChange" placeholder="用量"/>
+              <view class="ing-unit">份</view>
+              <view class="remove-ing-btn" data-index="{{index}}" bindtap="onRemoveIngredient">✕</view>
+            </view>
+          </view>
+          <view class="add-ing-btn" bindtap="onShowIngredientPicker">+ 添加食材</view>
+        </view>
+      </scroll-view>
+      <view class="modal-footer">
+        <button class="btn-outline" bindtap="onCancel">取消</button>
+        <button class="btn-primary" bindtap="onSubmit">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 食材选择弹层 -->
+  <view class="modal-mask" wx:if="{{showIngredientPicker}}" bindtap="onHideIngredientPicker">
+    <view class="modal-content" catchtap="noop">
+      <view class="modal-title">选择食材</view>
+      <scroll-view scroll-y class="modal-body" style="max-height: 50vh;">
+        <view wx:if="{{ingredients.length > 0}}">
+          <view
+            class="ing-pick-item"
+            wx:for="{{ingredients}}"
+            wx:key="_id"
+            data-id="{{item._id}}"
+            data-name="{{item.name}}"
+            bindtap="onSelectIngredient"
+          >
+            <view class="ing-pick-name">{{item.name}}</view>
+            <view class="ing-pick-cat">{{item.category}} · 库存 {{item.stock}} {{item.unit}}</view>
+          </view>
+        </view>
+        <view class="empty-state" wx:else>
+          <view>暂无食材，请点击下方按钮添加</view>
+        </view>
+      </scroll-view>
+      <!-- 新建食材入口 -->
+      <view class="picker-footer">
+        <view class="new-ing-btn" bindtap="onShowNewIngredientForm">
+          + 新建食材
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="btn-outline" bindtap="onHideIngredientPicker">取消</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 新建食材弹层 -->
+  <view class="modal-mask" wx:if="{{showNewIngredientForm}}" bindtap="onHideNewIngredientForm">
+    <view class="modal-content" catchtap="noop">
+      <view class="modal-title">新建食材</view>
+      <scroll-view scroll-y class="modal-body">
+        <view class="form-group">
+          <view class="form-label">食材名称 *</view>
+          <input class="form-input" value="{{newIngredient.name}}" data-field="name" bindinput="onNewIngredientInput" placeholder="如：虾仁"/>
+        </view>
+        <view class="form-group">
+          <view class="form-label">分类</view>
+          <picker mode="selector" range="{{['肉类','蔬菜','海鲜','蛋奶','调味料','主食','豆制品','菌菇','水果','其他']}}" bindchange="onNewIngredientCategoryChange">
+            <view class="form-input picker-val">{{newIngredient.category}}</view>
+          </picker>
+        </view>
+        <view class="form-group">
+          <view class="form-label">单位</view>
+          <input class="form-input" value="{{newIngredient.unit}}" data-field="unit" bindinput="onNewIngredientInput" placeholder="如：克"/>
+        </view>
+        <view class="form-group">
+          <view class="form-label">初始库存</view>
+          <input class="form-input" type="number" value="{{newIngredient.stock}}" data-field="stock" bindinput="onNewIngredientInput"/>
+        </view>
+        <view class="form-hint">新食材将自动加入食材库存</view>
+      </scroll-view>
+      <view class="modal-footer">
+        <button class="btn-outline" bindtap="onHideNewIngredientForm">返回选择</button>
+        <button class="btn-primary" bindtap="onSubmitNewIngredient">创建并添加</button>
+      </view>
+    </view>
+  </view>
+</view>

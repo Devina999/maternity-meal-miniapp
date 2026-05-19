@@ -1,0 +1,118 @@
+.dish-card-item { margin-bottom: 20rpx; }
+
+.dish-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10rpx;
+}
+
+.dish-name {
+  font-size: 30rpx;
+  font-weight: bold;
+}
+
+.dish-ingredients {
+  margin-top: 10rpx;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.ing-label-text {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.ing-chip {
+  display: inline-block;
+  background: #f0f5ff;
+  color: #E8B4B8;
+  padding: 4rpx 14rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+}
+
+.ing-amount { color: #999; margin-left: 4rpx; }
+
+.no-ing { font-size: 24rpx; color: #ccc; }
+
+.dish-actions {
+  margin-top: 16rpx;
+  display: flex;
+  gap: 30rpx;
+}
+
+.action-link { font-size: 24rpx; color: #E8B4B8; }
+.action-link.danger { color: #C4A5A5; }
+
+/* 弹窗通用 */
+.modal-mask {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5); z-index: 100;
+  display: flex; align-items: flex-end;
+}
+
+.modal-content {
+  width: 100%; background: #fff;
+  border-radius: 24rpx 24rpx 0 0; max-height: 85vh;
+  display: flex; flex-direction: column;
+}
+
+.modal-title {
+  font-size: 32rpx; font-weight: bold; text-align: center;
+  padding: 30rpx; border-bottom: 1rpx solid #eee; flex-shrink: 0;
+}
+
+.modal-body { flex: 1; padding: 30rpx; }
+
+.modal-footer {
+  display: flex; gap: 20rpx; padding: 20rpx 30rpx 40rpx;
+  border-top: 1rpx solid #eee; flex-shrink: 0;
+}
+.modal-footer button { flex: 1; }
+
+.picker-val { color: #333; }
+
+/* 已选食材 */
+.selected-ings { margin-bottom: 10rpx; }
+
+.ing-tag-row {
+  display: flex; align-items: center; gap: 10rpx;
+  margin-bottom: 12rpx; background: #f9f9f9;
+  padding: 10rpx 16rpx; border-radius: 10rpx;
+}
+
+.ing-name-tag { flex: 1; font-size: 26rpx; color: #333; font-weight: bold; }
+
+.ing-amount-input {
+  width: 80rpx; padding: 8rpx; background: #fff;
+  border-radius: 8rpx; font-size: 24rpx; text-align: center;
+  border: 1rpx solid #e5e5e5;
+}
+
+.ing-unit { font-size: 22rpx; color: #999; }
+
+.remove-ing-btn { color: #C4A5A5; font-size: 28rpx; padding: 6rpx; }
+
+.add-ing-btn {
+  color: #E8B4B8; font-size: 26rpx; padding: 14rpx 0;
+  border: 2rpx dashed #E8B4B8; border-radius: 10rpx; text-align: center;
+}
+
+/* 食材选择列表 */
+.ing-pick-item { padding: 20rpx; border-bottom: 1rpx solid #f0f0f0; }
+.ing-pick-item:active { background: #f5f9ff; }
+
+.ing-pick-name { font-size: 28rpx; font-weight: bold; margin-bottom: 4rpx; }
+.ing-pick-cat { font-size: 22rpx; color: #999; }
+
+/* 选择器底部新建食材按钮 */
+.picker-footer { padding: 20rpx 30rpx; border-top: 1rpx solid #f0f0f0; }
+.new-ing-btn {
+  text-align: center; color: #E8B4B8; font-size: 26rpx;
+  padding: 20rpx; border: 2rpx dashed #E8B4B8; border-radius: 12rpx;
+}
+
+.form-hint { font-size: 22rpx; color: #bbb; text-align: center; padding: 16rpx 0; }

@@ -1,0 +1,170 @@
+/* 全局样式 - 马卡龙色系 */
+page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 28rpx;
+  color: #555;
+  background-color: #F9F5F2;
+  line-height: 1.6;
+}
+
+/* 通用容器 */
+.container {
+  padding: 28rpx 28rpx 80rpx;
+  min-height: 100vh;
+}
+
+/* 卡片 */
+.card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  margin-bottom: 28rpx;
+  box-shadow: 0 4rpx 20rpx rgba(200,180,190,0.08);
+}
+
+/* 区块标题 */
+.section-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #5B5B6B;
+  margin-bottom: 24rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 2rpx solid #F2EEF0;
+}
+
+/* 按钮 */
+.btn-primary {
+  background: linear-gradient(135deg, #E8B4B8, #C4B5D4);
+  color: #fff;
+  border-radius: 30rpx;
+  padding: 24rpx 40rpx;
+  text-align: center;
+  font-size: 30rpx;
+  border: none;
+  font-weight: bold;
+  margin-top: 36rpx;
+}
+
+.btn-cancel-menu {
+  background: #fff;
+  color: #C4A5A5;
+  border: 2rpx solid #C4A5A5;
+  border-radius: 30rpx;
+  padding: 24rpx 40rpx;
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: bold;
+}
+
+.btn-danger {
+  background: #D4A5A5;
+  color: #fff;
+  border-radius: 30rpx;
+  padding: 24rpx 40rpx;
+  text-align: center;
+  font-size: 30rpx;
+  border: none;
+  margin-top: 20rpx;
+}
+
+.btn-outline {
+  background: #fff;
+  color: #E8B4B8;
+  border: 2rpx solid #E8B4B8;
+  border-radius: 30rpx;
+  padding: 22rpx 38rpx;
+  text-align: center;
+  font-size: 30rpx;
+}
+
+.btn-sm {
+  padding: 16rpx 28rpx;
+  font-size: 26rpx;
+}
+
+/* 标签 */
+.tag {
+  display: inline-block;
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  margin-right: 10rpx;
+  margin-bottom: 10rpx;
+}
+
+.tag-blue { background: #F0E5EC; color: #C4A0B0; }
+.tag-red { background: #F0E5E5; color: #C4A0A0; }
+.tag-green { background: #E8F0E8; color: #90B090; }
+.tag-orange { background: #F0EBE5; color: #C4B0A0; }
+.tag-gray { background: #F2F2F2; color: #b0b0b0; }
+
+/* 表单 */
+.form-group {
+  margin-bottom: 34rpx;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: #7B6B7B;
+  margin-bottom: 16rpx;
+  display: block;
+  font-weight: 500;
+}
+
+.form-input {
+  width: 100%;
+  padding: 24rpx 24rpx;
+  border: 2rpx solid #E5DDE0;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  background: #FFFAFD;
+  box-sizing: border-box;
+  color: #5B5B6B;
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 24rpx 24rpx;
+  border: 2rpx solid #E5DDE0;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  background: #FFFAFD;
+  min-height: 160rpx;
+  box-sizing: border-box;
+  color: #5B5B6B;
+  line-height: 1.8;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 100rpx 40rpx;
+  color: #b0b0b0;
+  font-size: 28rpx;
+}
+
+/* 提示文字 */
+.hint-text {
+  font-size: 24rpx;
+  color: #b0b0b0;
+  margin-top: 10rpx;
+  line-height: 1.5;
+}
+
+/* 列表项 */
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28rpx 0;
+  border-bottom: 1rpx solid #F2EEF0;
+}
+.list-item:last-child { border-bottom: none; }
+
+/* 加载更多 */
+.load-more {
+  text-align: center;
+  padding: 28rpx;
+  color: #b0b0b0;
+  font-size: 24rpx;
+}

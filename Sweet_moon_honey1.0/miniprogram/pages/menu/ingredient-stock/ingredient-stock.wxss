@@ -1,0 +1,52 @@
+.ing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.ing-name {
+  font-size: 30rpx;
+  font-weight: bold;
+}
+
+.stock-bar {
+  height: 12rpx;
+  background: #eee;
+  border-radius: 6rpx;
+  margin-bottom: 8rpx;
+  overflow: hidden;
+}
+
+.stock-fill {
+  height: 100%;
+  background: #E8B4B8;
+  border-radius: 6rpx;
+  transition: width 0.3s;
+}
+
+.stock-fill.low {
+  background: #C4A5A5;
+}
+
+.stock-text {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.alert-text {
+  color: #C4A5A5;
+}
+
+.ing-actions {
+  margin-top: 16rpx;
+  display: flex;
+  gap: 30rpx;
+}
+
+.action-link {
+  font-size: 24rpx;
+  color: #E8B4B8;
+}
+
+.action-link.danger { color: #C4A5A5; }
