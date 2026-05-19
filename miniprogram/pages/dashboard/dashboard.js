@@ -105,9 +105,8 @@ Page({
         { title: '反馈与数据', icon: '📊', items: [
           { name: '餐食反馈', desc: '查看处理宝妈反馈', url: '/pages/feedback/list/list' },
         ]},
-        { title: '系统管理', icon: '⚙️', items: [
-          { name: '系统设置', desc: '截止时间、系统规则', url: '/pages/settings/index/index' },
-          { name: '用户管理', desc: '添加禁用员工账号', url: '/pages/settings/user-management/user-management' },
+        { title: '职员管理', icon: '👥', items: [
+          { name: '职员管理', desc: '查看管理所有职员账号', url: '/pages/settings/user-management/user-management' },
         ]},
       ],
       [ROLE.SUPER_ADMIN]: [
@@ -124,9 +123,11 @@ Page({
         { title: '反馈与数据', icon: '📊', items: [
           { name: '餐食反馈', desc: '查看处理宝妈反馈', url: '/pages/feedback/list/list' },
         ]},
+        { title: '职员管理', icon: '👥', items: [
+          { name: '职员管理', desc: '查看管理所有职员账号', url: '/pages/settings/user-management/user-management' },
+        ]},
         { title: '系统管理', icon: '⚙️', items: [
           { name: '系统设置', desc: '截止时间、系统规则', url: '/pages/settings/index/index' },
-          { name: '用户管理', desc: '添加禁用员工账号', url: '/pages/settings/user-management/user-management' },
         ]},
       ],
       [ROLE.HEAD_CHEF]: [

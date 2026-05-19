@@ -24,9 +24,9 @@ Page({
   onShow() {
     const role = app.getRole()
     this.setData({
-      canUpdateToCompleted: role === 'super_admin' || role === 'head_chef' || role === 'cook' || role === 'boss' || role === 'nurse_manager',
-      canUpdateToServed: role === 'super_admin' || role === 'nurse_manager' || role === 'boss' || role === 'head_chef',
-      canUndo: role === 'super_admin' || role === 'boss' || role === 'head_chef'
+      canUpdateToCompleted: role === 'super_admin' || role === 'boss' || role === 'head_chef' || role === 'cook' || role === 'nurse_manager' || role === 'receptionist',
+      canUpdateToServed: role === 'super_admin' || role === 'boss' || role === 'nurse_manager' || role === 'nurse' || role === 'receptionist',
+      canUndo: role === 'super_admin' || role === 'boss'
     })
     this.loadData()
   },

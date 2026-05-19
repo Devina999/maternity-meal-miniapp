@@ -49,10 +49,11 @@ exports.main = async (event) => {
       institution_id, date, meal_type
     }).remove()
 
-    // 4. 更新菜单状态为草稿，清除制作状态和库存记录
+    // 4. 更新菜单状态为草稿，清除发布相关字段
     await db.collection('daily_menus').doc(menu._id).update({
       data: {
         status: 'draft',
+        confirmed_at: db.command.remove(),
         dish_production: db.command.remove(),
         stock_changes: db.command.remove(),
         updated_at: new Date()

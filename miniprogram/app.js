@@ -71,7 +71,7 @@ App({
 
   canEditMenu: function () {
     const role = this.getRole()
-    return role === constants.ROLE.SUPER_ADMIN || role === constants.ROLE.HEAD_CHEF
+    return role === constants.ROLE.SUPER_ADMIN || role === constants.ROLE.HEAD_CHEF || role === constants.ROLE.BOSS
   },
 
   canApproveRestrictions: function () {

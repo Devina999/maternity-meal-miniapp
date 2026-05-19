@@ -57,8 +57,8 @@ const DISH_PRODUCTION_STATUS = {
 
 const DISH_PRODUCTION_STATUS_NAME = {
   preparing: '制作中',
-  completed: '制作完成',
-  served: '上菜完成'
+  completed: '已出餐',
+  served: '已上菜'
 }
 
 // 餐食类型

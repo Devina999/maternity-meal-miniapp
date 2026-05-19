@@ -86,7 +86,7 @@ module.exports = { inArray: inArray };
       class="btn-primary"
       bindtap="onConfirmMenu"
       style="margin-top:30rpx"
-      wx:if="{{allDishes.length > 0 && selectedDishIds.length > 0}}"
+      wx:if="{{allDishes.length > 0 && selectedDishIds.length > 0 && (!menus[activeMealType] || menus[activeMealType].status !== 'confirmed')}}"
     >确认并发布餐单</button>
 
     <button

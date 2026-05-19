@@ -1,5 +1,5 @@
 <wxs module="u">
-var sName = {preparing:'制作中',completed:'制作完成',served:'上菜完成'};
+var sName = {preparing:'制作中',completed:'已出餐',served:'已上菜'};
 var sColor = {preparing:'#FF9F43',completed:'#FF6B9D',served:'#A29BFE'};
 module.exports = { n: sName, c: sColor };
 </wxs>
@@ -20,8 +20,8 @@ module.exports = { n: sName, c: sColor };
   <!-- 统计 -->
   <view class="pb-stats">
     <view class="pb-stat"><text class="pb-stat-num">{{stats.preparing}}</text>制作中</view>
-    <view class="pb-stat"><text class="pb-stat-num">{{stats.completed}}</text>制作完成</view>
-    <view class="pb-stat"><text class="pb-stat-num">{{stats.served}}</text>上菜完成</view>
+    <view class="pb-stat"><text class="pb-stat-num">{{stats.completed}}</text>已出餐</view>
+    <view class="pb-stat"><text class="pb-stat-num">{{stats.served}}</text>已上菜</view>
   </view>
 
   <!-- 空状态：未发布菜单 -->
@@ -59,7 +59,7 @@ module.exports = { n: sName, c: sColor };
           data-dish-id="{{item.dish_id}}"
           data-status="completed"
           bindtap="onStatusChange"
-        >标记制作完成</button>
+        >标记已出餐</button>
 
         <button
           wx:if="{{item.status === 'completed' && canUpdateToServed}}"
@@ -67,7 +67,7 @@ module.exports = { n: sName, c: sColor };
           data-dish-id="{{item.dish_id}}"
           data-status="served"
           bindtap="onStatusChange"
-        >标记上菜完成</button>
+        >标记已上菜</button>
 
         <button
           wx:if="{{item.status === 'completed' && canUndo}}"
@@ -75,7 +75,7 @@ module.exports = { n: sName, c: sColor };
           data-dish-id="{{item.dish_id}}"
           data-status="preparing"
           bindtap="onStatusChange"
-        >撤销制作完成</button>
+        >撤销已出餐</button>
 
         <button
           wx:if="{{item.status === 'served' && canUndo}}"
@@ -83,10 +83,10 @@ module.exports = { n: sName, c: sColor };
           data-dish-id="{{item.dish_id}}"
           data-status="completed"
           bindtap="onStatusChange"
-        >撤销上菜完成</button>
+        >撤销已上菜</button>
 
-        <view wx:if="{{item.status === 'preparing' && !canUpdateToCompleted}}" class="no-perm-hint">需后厨/主厨/管理员操作</view>
-        <view wx:if="{{item.status === 'completed' && !canUpdateToServed && !canUndo}}" class="no-perm-hint">需护士/前厅经理/管理员操作</view>
+        <view wx:if="{{item.status === 'preparing' && !canUpdateToCompleted}}" class="no-perm-hint">需后厨/主厨/管理/前台操作</view>
+        <view wx:if="{{item.status === 'completed' && !canUpdateToServed && !canUndo}}" class="no-perm-hint">需护士/前厅经理/管理/前台操作</view>
         <view wx:if="{{item.status === 'served' && !canUndo}}" class="no-perm-hint">制作流程已完成</view>
       </view>
     </view>

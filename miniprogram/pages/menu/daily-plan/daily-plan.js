@@ -191,7 +191,8 @@ Page({
       date: newDate,
       isPast,
       canEdit: canEditMenu,
-      canEditPast: canEditMenu
+      canEditPast: canEditMenu,
+      canCancelMenu: role === 'super_admin' || role === 'boss' || role === 'head_chef' || role === 'nurse_manager'
     }, () => this.loadData())
   },
 
@@ -237,6 +238,13 @@ Page({
     if (!this.data.canEdit) return
     const dishId = e.currentTarget.dataset.id
     const current = this.getCurrentMenu()
+
+    // 已发布的菜单不允许直接修改菜品，需先取消发布
+    if (current && current.status === 'confirmed') {
+      wx.showToast({ title: '请先取消发布再修改菜品', icon: 'none' })
+      return
+    }
+
     let dishIds = current ? [...current.dish_ids] : []
 
     const idx = dishIds.indexOf(dishId)
@@ -281,7 +289,7 @@ Page({
     }
 
     // 当日该餐别已发布过，不允许再次发布
-    if (current.confirmed_at) {
+    if (current.status === 'confirmed') {
       wx.showToast({ title: '今日该餐别已发布过，不可再次发布', icon: 'none' })
       return
     }
